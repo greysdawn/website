@@ -662,6 +662,6 @@ app.use("/*", async (req, res, next)=> {
 	res.send(index);
 })
 
-app.listen(process.env.PORT || 8080);
+// app.listen(process.env.PORT || 8000);
 console.log("Ready.");
-// module.exports = app;
+module.exports = app;
