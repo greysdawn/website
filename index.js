@@ -471,6 +471,42 @@ app.get('/project/:id', async (req,res)=>{
 	}
 });
 
+app.get('/comics', async (req,res)=>{
+	var index = fs.readFileSync(path.join(__dirname+'/frontend/build/index.html'),'utf8');
+	index = index.replace('$TITLE', 'Comics | Send Us into the Light');
+	index = index.replace('$DESC', 'Home of the Grey Skies');
+	index = index.replace('$TWITDESC', 'Home of the Grey Skies');
+	index = index.replace('$TWITTITLE', 'Comics | Send Us into the Light');
+	index = index.replace('$OGTITLE', 'Comics | Send Us into the Light');
+	index = index.replace('$OGDESC', 'Home of the Grey Skies');
+	index = index.replace('$OEMBED', 'oembed.json');
+	res.send(index);
+});
+
+app.get('/comics/:hid', async (req,res)=>{
+	var index = fs.readFileSync(path.join(__dirname+'/frontend/build/index.html'),'utf8');
+	var comic = await getComic(req.params.hid);
+	if(comic) {
+		index = index.replace('$TITLE', comic.name+' | Send Us into the Light');
+		index = index.replace('$DESC', 'Home of the Grey Skies');
+		index = index.replace('$TWITDESC', 'Home of the Grey Skies');
+		index = index.replace('$TWITTITLE', comic.name+' | Send Us into the Light');
+		index = index.replace('$OGTITLE', comic.name+' | Send Us into the Light');
+		index = index.replace('$OGDESC', 'Home of the Grey Skies');
+		index = index.replace('$OEMBED', 'oembed.json');
+		res.send(index);
+	} else {
+		index = index.replace('$TITLE', '404 | Send Us into the Light');
+		index = index.replace('$DESC', 'Project not found');
+		index = index.replace('$TWITDESC', 'Project not found');
+		index = index.replace('$TWITTITLE', '404 | Send Us into the Light');
+		index = index.replace('$OGTITLE', '404 | Send Us into the Light');
+		index = index.replace('$OGDESC', 'Project not found');
+		index = index.replace('$OEMBED', 'oembed.json');
+		res.send(index);
+	}
+});
+
 
 //API ROUTES
 
