@@ -1,14 +1,23 @@
 import React, {Component, Fragment as Frag} from 'react';
 
-const images = require.context(__dirname+"/Images");
+const images = require.context(`${__dirname}/Images`, true);
 
 class Page extends Component {
 	constructor(props) {
 		super(props);
 
+		var imgs = images.keys().map(k => {
+			if(k.split("/")[1] == this.props.match.params.hid) {
+				return k
+			} else {
+				return null
+			}
+		}).filter(x => x!=null);
+		console.log(imgs);
 		this.state = {
 			hid: this.props.match.params.hid,
-			fetched: false
+			fetched: false,
+			images: imgs
 		}
 	}
 
@@ -32,7 +41,13 @@ class Page extends Component {
 	              <p><em>{comic.tagline}</em></p>
 	       		</section>
 	       		<section className="Comics-page">
-				<img className="Comics-comic" src={images("./"+comic.hid+'.png')} />
+				<div className="Comics-comic">
+				{
+					this.state.images.map((img, i) => {
+						return <img src={images(img)} key={i} alt={`panel ${i+1}`}/>
+					})
+				}
+				</div>
 				<div className="Comics-description">
 				<h1 style={{textAlign: "center"}}>Description</h1>
 				<p dangerouslySetInnerHTML={{__html: comic.desc}}></p>
