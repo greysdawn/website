@@ -1,0 +1,83 @@
+.Comics-list {
+	display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    background-color: transparent;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+}
+
+.Comics-list>* {
+  flex: 1 1 300px;
+  max-width: 90%;
+  width: 90%;
+}
+
+.Comics-story {
+	display: flex;
+	flex-direction: row;
+	background-color: #aaa;
+    margin: 20px;
+    border-radius: 10px;
+}
+
+.Comics-story > h1 {
+    writing-mode: vertical-lr;
+    transform: scale(-1);
+}
+
+.Comics-thumbnail {
+	border-radius: 10px;
+	position: relative;
+	background-position: center;
+    text-align: center;
+    word-break: break-word;
+    line-height: 256px;
+    margin: 20px;
+    width: 256px;
+    height: 256px;
+}
+
+.Comics-thumbnail h1 {
+	padding: 5px;
+    border-radius: 5px;
+    width: 90%;
+    background-color: rgba(0,0,0,.75);
+    color: white;
+    line-height: 1.5;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.Comics-description {
+	padding: 20px;
+	margin: 30px;
+	background-color: #aaa;
+	border-radius: 10px;
+	width: 90%;
+	text-align: left;
+}
+
+.Comics-comic {
+	max-width: 90%;
+}
+
+@media (max-width: 900px) {
+	.Comics-story {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.Comics-story > h1 {
+		writing-mode: horizontl-tb;
+		transform: none;
+	}
+
+	.Comics-thumbnail {
+		width: 90%;
+	}
+}

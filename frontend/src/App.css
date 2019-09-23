@@ -11,7 +11,6 @@ body {
   align-items: center;
   justify-content: space-between;
   min-height: 100vh;
-  /*background-color: #555;*/
   overflow-y: auto;
 }
 
@@ -325,12 +324,16 @@ code {
   align-items: center;
   text-align: center;
   background-color: white;
-  height: auto;
+  height: 200px;
   line-height: unset;
   cursor: pointer;
   text-decoration: none;
   color: #777;
   transition: .5s;
+}
+
+.App-projectCard p {
+  width: 90%;
 }
 
 .App-projectCard:hover {
@@ -353,14 +356,14 @@ code {
 
 .App-description::-webkit-scrollbar {
     width: 5px;
-    background-color: #aaa;
+    background-color: #777;
     border-radius: 2px;
 }
 
 .App-description::-webkit-scrollbar-thumb {
     width: 5px;
     border-radius: 2px;
-    background-color: #555;
+    background-color: #aaa;
 }
 
 .App-tagline {

@@ -1,6 +1,5 @@
 import React, { Component, Fragment as Frag } from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import {Helmet} from 'react-helmet';
 import './App.css';
 
 import Home     from './Pages/Home';
@@ -10,6 +9,9 @@ import System   from './Pages/System';
 import Blog     from './Pages/Blog';
 import Post     from './Pages/Post';
 import Admin    from './Pages/Admin';
+
+import Landing from './Pages/Comics/Landing';
+import Page from './Pages/Comics/Page';
 
 class App extends Component {
   constructor() {
@@ -63,7 +65,7 @@ class App extends Component {
   }
 
   render() {
-    var links = ["home","contact","system","blog"];
+    var links = ["home","contact","system","blog","comics"];
     if(!this.state.projects) {
       return null;
     } else {
@@ -89,6 +91,9 @@ class App extends Component {
             <Route path="/system" render={(props)=><System {...props} id={this.state.sysid} />} />
             <Route path="/blog" exact render={(props)=><Blog {...props} />} />
             <Route path="/blog/post/:id" exact render={(props)=><Post {...props}/>} />
+            <Route path="/comics" exact render={(props)=><Landing {...props}/>} />
+            <Route path="/comics/:hid" exact render={(props)=><Page {...props}/>} />
+            
             {
               this.state.user ?
               <Route path="/admin" render={(props)=> <Admin {...props} user={this.state.user} />} /> :

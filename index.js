@@ -16,6 +16,12 @@ const stripper	= require('sanitize-html');
 
 require('dotenv').config();
 
+showdown.setOption('simplifiedAutoLink', true);
+showdown.setOption('simpleLineBreaks', true);
+showdown.setOption('openLinksInNewWindow', true);
+showdown.setOption('underline', true);
+showdown.setOption('strikethrough', true);
+
 const conv	= new showdown.Converter();
 
 const db	= dblite('website_data.sqlite','-header');
@@ -296,6 +302,8 @@ async function updateSysID(id) {
 	})
 }
 
+//MISC
+
 async function getContacts() {
 	return new Promise(res => {
 		db.query(`SELECT * FROM contacts`,(err, rows)=> {
@@ -304,6 +312,43 @@ async function getContacts() {
 				res(undefined);
 			} else {
 				res(rows);
+			}
+		})
+	})
+}
+
+//COMICS
+
+async function getComics() {
+	return new Promise(res => {
+		db.query(`SELECT * FROM comics`, (err, rows) => {
+			if(err) {
+				console.log(err);
+				res(undefined);
+			} else {
+				var comics = {};
+				rows.forEach(cm => {
+					if(comics[cm.story]) {
+						comics[cm.story].push(cm);
+					} else {
+						comics[cm.story] = [cm];
+					}
+				})
+				res(comics);
+			}
+		})
+	})
+}
+
+async function getComic(hid) {
+	return new Promise(res => {
+		db.query(`SELECT * FROM comics WHERE hid=?`,[hid], (err, rows)=> {
+			if(err) {
+				console.log(err);
+				res(undefined);
+			} else {
+				rows[0].desc = conv.makeHtml(rows[0].desc);
+				res(rows[0]);
 			}
 		})
 	})
@@ -426,7 +471,6 @@ app.get('/api/posts/:id',async (req,res)=>{
 
 app.post('/api/post', async (req,res)=> {
 	res.set("Content-Type","text/html");
-	console.log(req.body)
 	if(!req.verified) return res.status(401).send("UNAUTHORIZED");
 	var created = await createPost(req.body);
 	if(created) {
@@ -634,6 +678,18 @@ app.get('/api/contacts', async (req, res)=> {
 	res.send(contacts);
 })
 
+//COMICS
+
+app.get('/api/comics', async (req,res)=> {
+	var comics = await getComics();
+	res.send(comics);
+})
+
+app.get('/api/comic/:hid', async (req,res)=> {
+	var comic = await getComic(req.params.hid);
+	res.send(comic);
+})
+
 
 //OTHER APIS
 app.get("/git/api/*",async (req,res)=>{
@@ -662,6 +718,6 @@ app.use("/*", async (req, res, next)=> {
 	res.send(index);
 })
 
-// app.listen(process.env.PORT || 8000);
+app.listen(process.env.PORT || 8080);
 console.log("Ready.");
-module.exports = app;
+// module.exports = app;
