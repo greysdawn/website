@@ -52,6 +52,10 @@ class Page extends Component {
 				<h1 style={{textAlign: "center"}}>Description</h1>
 				<p dangerouslySetInnerHTML={{__html: comic.desc}}></p>
 				</div>
+				<div className="Comics-buttons">
+				<a className={"Comics-button"+(comic.prev ? "" : " Comics-disabled")} href={comic.prev ? `/comics/${comic.prev}` : ''}>Previous</a>
+				<a className={"Comics-button"+(comic.next ? "" : " Comics-disabled")} href={comic.next ? `/comics/${comic.next}` : ''}>Next</a>
+				</div>
 				</section>
 				</div>
 			)

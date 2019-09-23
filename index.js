@@ -340,17 +340,35 @@ async function getComics() {
 	})
 }
 
-async function getComic(hid) {
+async function getRawComics() {
 	return new Promise(res => {
-		db.query(`SELECT * FROM comics WHERE hid=?`,[hid], (err, rows)=> {
+		db.query(`SELECT * FROM comics ORDER BY story, id`, (err, rows) => {
 			if(err) {
 				console.log(err);
 				res(undefined);
 			} else {
-				rows[0].desc = conv.makeHtml(rows[0].desc);
-				res(rows[0]);
+				res(rows);
 			}
 		})
+	})
+}
+
+async function getComic(hid) {
+	return new Promise(async res => {
+		var cm = await getComics();
+		var comics = [];
+		Object.keys(cm).forEach(c => {
+			cm[c].map(x => comics.push(x));
+		})
+		var comic = comics.find(x => x.hid == hid);
+		if(!comic) res(undefined);
+		else {
+			var index = comics.indexOf(comic);
+			comic.prev = index > 0 ? comics[index - 1].hid : undefined;
+			comic.next = index < comics.length - 1 ? comics[index + 1].hid : undefined;
+			comic.desc = conv.makeHtml(comic.desc);
+			res(comic);
+		}
 	})
 }
 

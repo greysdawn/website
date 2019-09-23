@@ -73,6 +73,30 @@
 	max-width: 90%;
 }
 
+.Comics-buttons {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
+	width: 90%;
+}
+
+.Comics-button {
+	width: 20%;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	background-color: #aaa;
+	border-radius: 20px;
+	color: black;
+	text-decoration: none;
+}
+
+.Comics-button.Comics-disabled {
+	background-color: #555;
+	color: #aaa;
+}
+
 @media (max-width: 900px) {
 	.Comics-story {
 		flex-direction: column;
