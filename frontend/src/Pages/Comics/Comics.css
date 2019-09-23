@@ -20,6 +20,7 @@
 .Comics-story {
 	display: flex;
 	flex-direction: row;
+	flex-wrap: wrap;
 	background-color: #aaa;
     margin: 20px;
     border-radius: 10px;
