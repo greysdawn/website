@@ -17,9 +17,11 @@ class Story extends Component {
 		return (
 			<div className="Comics-story">
 			<h1>{this.state.name}</h1>
+			<div className="Comics-clist">
 			{comics.map(c => {
 				return (<Thumbnail key={c.hid} comic={c} />)
 			})}
+			</div>
 			</div>
 		)
 	}

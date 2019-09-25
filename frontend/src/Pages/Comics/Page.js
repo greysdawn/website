@@ -1,23 +1,12 @@
 import React, {Component, Fragment as Frag} from 'react';
 
-const images = require.context(`${__dirname}/Images`, true);
-
 class Page extends Component {
 	constructor(props) {
 		super(props);
 
-		var imgs = images.keys().map(k => {
-			if(k.split("/")[1] == this.props.match.params.hid) {
-				return k
-			} else {
-				return null
-			}
-		}).filter(x => x!=null);
-		console.log(imgs);
 		this.state = {
 			hid: this.props.match.params.hid,
-			fetched: false,
-			images: imgs
+			fetched: false
 		}
 	}
 
@@ -43,8 +32,8 @@ class Page extends Component {
 	       		<section className="Comics-page">
 				<div className="Comics-comic">
 				{
-					this.state.images.map((img, i) => {
-						return <img src={images(img)} key={i} alt={`panel ${i+1}`}/>
+					comic.images.map((img, i) => {
+						return <img src={`/${comic.hid}/${img}`} key={i} alt={`panel ${i+1}`}/>
 					})
 				}
 				</div>

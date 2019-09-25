@@ -328,6 +328,7 @@ async function getComics() {
 			} else {
 				var comics = {};
 				rows.forEach(cm => {
+					cm.images = fs.readdirSync(__dirname+'/Images/'+cm.hid);
 					if(comics[cm.story]) {
 						comics[cm.story].push(cm);
 					} else {
@@ -367,6 +368,7 @@ async function getComic(hid) {
 			comic.prev = index > 0 ? comics[index - 1].hid : undefined;
 			comic.next = index < comics.length - 1 ? comics[index + 1].hid : undefined;
 			comic.desc = conv.makeHtml(comic.desc);
+			comic.images = fs.readdirSync(__dirname+'/Images/'+comic.hid);
 			res(comic);
 		}
 	})
@@ -759,6 +761,7 @@ app.get("/pk/api/*",async (req,res)=>{
 })
 
 app.use(express.static(path.join(__dirname, 'frontend/build')));
+app.use(express.static(path.join(__dirname, 'Images')));
 
 app.use("/*", async (req, res, next)=> {
 	var index = fs.readFileSync(path.join(__dirname+'/frontend/build/index.html'),'utf8');

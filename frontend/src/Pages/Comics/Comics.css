@@ -19,16 +19,24 @@
 
 .Comics-story {
 	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
+	flex-direction: column;
+	/*flex-wrap: wrap;*/
 	background-color: #aaa;
     margin: 20px;
     border-radius: 10px;
+    width: 90%;
 }
 
 .Comics-story > h1 {
-    writing-mode: vertical-lr;
-    transform: scale(-1);
+    text-align: center;
+}
+
+.Comics-clist {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
 }
 
 .Comics-thumbnail {
@@ -98,17 +106,13 @@
 }
 
 @media (max-width: 900px) {
-	.Comics-story {
+	.Comics-clist {
 		flex-direction: column;
 		align-items: center;
 	}
 
-	.Comics-story > h1 {
-		writing-mode: horizontal-tb;
-		transform: none;
-	}
-
 	.Comics-thumbnail {
 		width: 90%;
+		margin: 20px 0;
 	}
 }
