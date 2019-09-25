@@ -33,7 +33,7 @@ class Page extends Component {
 				<div className="Comics-comic">
 				{
 					comic.images.map((img, i) => {
-						return <img src={`/${comic.hid}/${img}`} key={i} alt={`panel ${i+1}`}/>
+						if(img != "thumb.png") return <img src={`/${comic.hid}/${img}`} key={i} alt={`panel ${i+1}`}/>
 					})
 				}
 				</div>

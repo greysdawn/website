@@ -14,7 +14,7 @@ class Thumbnail extends Component {
 	render() {
 		var comic = this.state.comic;
 		return (
-			<a href={`/comics/${comic.hid}`} className="Comics-thumbnail" style={{backgroundImage: `url('${comic.hid}_thumb.png')`}}>
+			<a href={`/comics/${comic.hid}`} className="Comics-thumbnail" style={{backgroundImage: `url('/${comic.hid}/thumb.png')`}}>
 				<h1>{comic.name}</h1>
 			</a>
 		)
