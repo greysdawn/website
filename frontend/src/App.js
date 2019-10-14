@@ -1,5 +1,6 @@
 import React, { Component, Fragment as Frag } from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import axios from 'axios';
 import './App.css';
 
 import Home     from './Pages/Home';
@@ -19,15 +20,11 @@ class App extends Component {
     this.state = {projects: undefined, sysid: undefined, contacts: undefined, login: {name: undefined, pass: undefined}, user: undefined};
   }
   async componentDidMount() {
-    var projects = await fetch('/api/projects');
-    projects = await projects.json();
-    var sysid = await fetch('/api/sysid');
-    sysid = await sysid.json();
-    var contacts = await fetch('/api/contacts');
-    contacts = await contacts.json();
-    var user = await fetch('/api/user');
+    var projects = (await axios('/api/projects')).data;
+    var sysid = (await axios('/api/sysid')).data;
+    var contacts = (await axios('/api/contacts')).data;
     try {
-      user = await user.json()
+      var user = (await axios('/api/user')).data;
     } catch(e) {
       user = undefined;
     }

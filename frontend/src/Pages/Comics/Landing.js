@@ -1,5 +1,5 @@
 import React, {Component, Fragment as Frag} from 'react';
-
+import axios from 'axios';
 import Story from './Story';
 import './Comics.css';
 
@@ -16,10 +16,9 @@ class Landing extends Component {
 	}
 
 	async componentDidMount() {
-		var c = await fetch('/api/comics');
+		var c = await axios('/api/comics');
 		if(c.status == 200) {
-			var dat = await c.json();
-			this.setState({comics: dat, fetched: true});
+			this.setState({comics: c.data, fetched: true});
 		} else {
 			this.setState({fetched: true});
 		}

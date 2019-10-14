@@ -13,6 +13,7 @@ const dblite	= require('dblite');
 const showdown	= require('showdown');
 const cookparse	= require('cookie-parser')
 const stripper	= require('sanitize-html');
+const multer 	= require('multer');
 
 require('dotenv').config();
 
@@ -34,6 +35,16 @@ app.use(cookparse());
 
 app.use(userAuth);
 
+var memstore = multer.memoryStorage();
+var upload = multer({
+	storage: memstore,
+	fileFiler: (req, file, cb) => {
+		if(req.path == "/api/comic" && (!file.mimetype === "image/*" || !req.verified)) cb(null, false);
+		else if(req.path == "/api/comic" && (file.mimetype === "image/*" || req.verified)) cb(null, true);
+		else cb(null, false);
+	}
+});
+
 const chars = process.env.CHARACTERS.split("");
 
 //FUNCTIONS
@@ -52,8 +63,8 @@ function genCode(table, num) {
 //AUTH
 function userAuth(req, res, next) {
 	var user = (req.cookies.user ? JSON.parse(req.cookies.user) :
-								   {username: req.body.name, pass: req.body.pass});
-	db.query(`SELECT * FROM users WHERE name=? AND password=?`,[user.username, user.pass],(err,rows)=>{
+								   {name: req.body.name, password: req.body.pass});
+	db.query(`SELECT * FROM users WHERE name=? AND password=?`,[user.name, user.password],(err,rows)=>{
 		if(err) {
 			console.log(err);
 			req.verified = false;
@@ -318,6 +329,20 @@ async function getContacts() {
 }
 
 //COMICS
+
+async function createComic(data) {
+	return new Promise(res => {
+		db.query(`INSERT INTO comics (hid, name, tagline, desc, story) VALUES (?, ?, ?, ?, ?)`,
+				[data.hid, data.comicname, data.tagline, data.desc, data.story || "misc"], (err, rows)=> {
+				if(err) {
+					console.log(err);
+					res(false)
+				} else {
+					res(true);
+				}
+				})
+	})
+}
 
 async function getComics() {
 	return new Promise(res => {
@@ -736,6 +761,31 @@ app.get('/api/contacts', async (req, res)=> {
 
 //COMICS
 
+app.post('/api/comic', upload.array('panels',10), async (req,res)=> {
+	if(!req.verified) return res.status(401).send('UNAUTHORIZED');
+	
+	var comic = await getComic(req.body.hid);
+	if(comic) return res.status(400).send({err: "hid taken"});
+	console.log(req.files)
+
+	try {
+		fs.mkdirSync(__dirname+"/Images/"+req.body.hid);
+	} catch(e) {
+		console.log(e);
+		return res.status(500).send({err: "couldn't create folder"});
+	}
+
+	req.files.forEach((f) => {
+		fs.writeFileSync(`${__dirname}/Images/${req.body.hid}/${f.originalname}`, f.buffer);
+	})
+
+	var success = await createComic(req.body);
+
+	if(success) res.status(200).send({msg: "saved"});
+	else res.status(500).send({err: "couldn't save data"});
+
+})
+
 app.get('/api/comics', async (req,res)=> {
 	var comics = await getComics();
 	res.send(comics);
@@ -775,6 +825,11 @@ app.use("/*", async (req, res, next)=> {
 	res.send(index);
 })
 
-// app.listen(process.env.PORT || 8080);
+app.use(function (err, req, res, next) {
+  console.log('This is the invalid field ->', err.field)
+  next(err)
+})
+
+app.listen(process.env.PORT || 8080);
 console.log("Ready.");
-module.exports = app;
+// module.exports = app;

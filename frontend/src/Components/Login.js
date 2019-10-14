@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import * as fetch from 'node-fetch';
+import axios from 'axios';
 
 class Login extends Component {
 	constructor() {
@@ -13,10 +13,9 @@ class Login extends Component {
 	}
 
 	async componentDidMount() {
-		var us = await fetch('/api/loggedin');
+		var us = await axios('/api/loggedin');
 		if(us.status == 200) {
-			var json = await us.json();
-			this.setState({user: json, name: json.name, pass: json.pass})
+			this.setState({user: us.data, name: us.data.name, pass: us.data.pass})
 		} else {
 			this.setState({user: "ERR"});
 		}

@@ -5,6 +5,7 @@ import './Admin.css';
 
 import CreatePost from '../Components/CreatePost';
 import CreateUser from '../Components/CreateUser';
+import CreateComic from '../Components/CreateComic';
 import Login from '../Components/Login';
 
 class Admin extends Component {
@@ -12,8 +13,8 @@ class Admin extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-						user: this.props.user
-					 }
+			user: this.props.user
+		 }
 	}
 
 	render() {
@@ -26,11 +27,15 @@ class Admin extends Component {
 				<a className="Admin-sideItem" href="/admin/createuser">
 					Create User
 				</a>
+				<a className="Admin-sideItem" href="/admin/createcomic">
+					Create Comic
+				</a>
 				</div>
 				<div className="Admin-content">
 					<Router>
 						<Route path='/admin/createpost' exact render={(props)=><CreatePost {...props} user={this.state.user}/>} />
 						<Route path='/admin/createuser' exact render={(props)=><CreateUser {...props} user={this.state.user}/>} />
+						<Route path='/admin/createcomic' exact render={(props)=><CreateComic {...props} user={this.state.user}/>} />
 					</Router>
 				</div>
 			</div>

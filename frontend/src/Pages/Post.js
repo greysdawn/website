@@ -1,5 +1,5 @@
 import React, {Component, Fragment as Frag} from 'react';
-import * as fetch from 'node-fetch';
+import axios from 'axios';
 
 import './Post.css';
 
@@ -11,8 +11,8 @@ class Post extends Component {
 	}
 
 	async componentDidMount() {
-		var dat = await fetch('/api/post/'+this.state.postid);
-		this.setState({post: await dat.json()})
+		var dat = await axios('/api/post/'+this.state.postid);
+		this.setState({post: dat.data})
 	}
 
 	render() {

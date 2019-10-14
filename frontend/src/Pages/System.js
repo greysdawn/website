@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import * as fetch from 'node-fetch';
+import axios from 'axios';
 
 import MemberCard from '../Components/MemberCard';
 
@@ -14,8 +14,8 @@ class System extends Component {
 
 	async componentDidMount() {
 		if(this.state.id) {
-			var sys = await fetch(`/pk/api/s/${this.state.id}/members`);
-			this.setState({ sys: (await sys.json()).sort((a,b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : ((b.name.toLowerCase() > a.name.toLowerCase()) ? -1 : 0))});
+			var sys = await axios(`/pk/api/s/${this.state.id}/members`);
+			this.setState({ sys: sys.dat.sort((a,b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : ((b.name.toLowerCase() > a.name.toLowerCase()) ? -1 : 0))});
 		}
 	}
 

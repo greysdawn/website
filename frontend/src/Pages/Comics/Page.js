@@ -1,4 +1,5 @@
 import React, {Component, Fragment as Frag} from 'react';
+import axios from 'axios';
 
 class Page extends Component {
 	constructor(props) {
@@ -11,10 +12,9 @@ class Page extends Component {
 	}
 
 	async componentDidMount() {
-		var c = await fetch('/api/comic/'+this.state.hid);
+		var c = await axios('/api/comic/'+this.state.hid);
 		if(c.status == 200) {
-			var dat = await c.json();
-			this.setState({comic: dat, fetched: true})
+			this.setState({comic: c.data, fetched: true})
 		} else {
 			this.setState({fetched: true});
 		}

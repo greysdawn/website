@@ -1,5 +1,5 @@
 import React, {Component, Fragment as Frag} from 'react';
-import * as fetch from 'node-fetch';
+import axios from 'axios';
 
 import './Blog.css';
 
@@ -14,9 +14,8 @@ class Blog extends Component {
 	}
 
 	async componentDidMount() {
-		var dat = await fetch('/api/posts');
-		console.log(dat.response);
-		this.setState({posts: await dat.json()})
+		var dat = await axios('/api/posts');
+		this.setState({posts: dat.data})
 	}
 
 	setPage(num) {
