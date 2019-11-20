@@ -15,7 +15,7 @@ class System extends Component {
 	async componentDidMount() {
 		if(this.state.id) {
 			var sys = await axios(`/pk/api/s/${this.state.id}/members`);
-			this.setState({ sys: sys.dat.sort((a,b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : ((b.name.toLowerCase() > a.name.toLowerCase()) ? -1 : 0))});
+			this.setState({ sys: sys.data.sort((a,b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : ((b.name.toLowerCase() > a.name.toLowerCase()) ? -1 : 0))});
 		}
 	}
 

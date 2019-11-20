@@ -352,6 +352,7 @@ code {
   overflow-x: hidden;
   overflow-y: auto;
   word-break: break-word;
+  padding: 0 10px;
 }
 
 .App-description::-webkit-scrollbar {
