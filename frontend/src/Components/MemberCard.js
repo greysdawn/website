@@ -14,24 +14,6 @@ class MemberCard extends Component {
 	constructor(props) {
 		super(props);
 
-		this.props.member.tmpdescription = sanitize(conv.makeHtml(this.props.member.description),
-		{
-			allowedTags: [
-				'em',
-				'strong',
-				'i',
-				'b',
-				'del',
-				'u',
-				'p',
-				'a',
-				'code',
-				'pre',
-				'br',
-				'blockquote'
-			]
-		});
-
 		this.state = {
 			key: 	this.props.key,
 			member: this.props.member  
@@ -49,10 +31,10 @@ class MemberCard extends Component {
 				<h1>
 					{memb.name.toUpperCase()}
 				</h1>
-				<img className="App-avatar" style={{boxShadow: "0 0 0 5px #"+(memb.color ? memb.color : "aaa")}} src={memb.avatar_url || "/default.png"} alt={memb.name + "'s avatar"}/>
+				<img className="App-avatar" style={{boxShadow: "0 0 0 5px #"+(memb.color ? memb.color : "aaa")}} src={memb.avatar_url || "https://cdn.discordapp.com/attachments/481322557925228544/568151546773110784/officialflag.png"} alt={memb.name + "'s avatar"}/>
 				<span className="App-tagline">{memb.prefix}</span>
-				<span className="App-tagline">{memb.pronouns || "(N/A)"} || {memb.birthday || "(N/A)"}</span>
-				<div className="App-description" dangerouslySetInnerHTML={{__html: memb.tmpdescription || "<p>(no description)</p>"}}></div>
+				<span className="App-tagline">{memb.pronouns || "(no pronouns given)"}</span>
+				<div className="App-description" dangerouslySetInnerHTML={{__html: memb.description ? memb.tmpdescription : "<p style='text-align: center;'>(no description)</p>"}}></div>
 				</div>
 			);
 		} else {

@@ -8,15 +8,12 @@ const images = require.context("../Images");
 class System extends Component {
 	constructor(props) {
 		super(props);
-
-		this.state = {id: this.props.id}
+		this.state = {sys: null}
 	}
 
 	async componentDidMount() {
-		if(this.state.id) {
-			var sys = await axios(`/pk/api/s/${this.state.id}/members`);
-			this.setState({ sys: sys.data.sort((a,b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : ((b.name.toLowerCase() > a.name.toLowerCase()) ? -1 : 0))});
-		}
+		var sys = await axios(`/api/sysmembs`);
+		this.setState({ sys: sys.data});
 	}
 
 	render() {
@@ -27,14 +24,6 @@ class System extends Component {
 				<section className="App-top">
 				<h1>The <span className="App-light">System</span></h1>
 				<p>The people here</p>
-				</section>
-				<section className="App-note">
-				    <h1>NOTE</h1>
-				    <p>Some members are called <em>introjects</em>-{" "}
-				    people from fictional/factual sources. These people do not claim{" "}
-				    to be <strong>the</strong> exact character; however, some have memories{" "}
-				    related to their "source," and their identities are based greatly on the{" "}
-				    character.<br/>Trust me, it's just as awkward for us as it is for you.</p>
 				</section>
 				<section className="App-list">
 		            {sys ?

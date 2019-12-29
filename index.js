@@ -14,6 +14,7 @@ const showdown	= require('showdown');
 const cookparse	= require('cookie-parser')
 const stripper	= require('sanitize-html');
 const multer 	= require('multer');
+const axios 	= require('axios');
 
 require('dotenv').config();
 
@@ -752,6 +753,33 @@ app.put('/api/sysid', async (req,res)=> {
 	}
 })
 
+app.get('/api/sysmembs', async (req, res) => {
+	var id = await getSysID();
+	var sys = await axios(`https://api.pluralkit.me/s/${id}/members`);
+	var members = sys.data.sort((a,b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : ((b.name.toLowerCase() > a.name.toLowerCase()) ? -1 : 0));
+	for(var i = 0; i < members.length; i++) {
+		if(!members[i].description) continue;
+		members[i].tmpdescription = stripper(conv.makeHtml(members[i].description),
+		{
+			allowedTags: [
+				'em',
+				'strong',
+				'i',
+				'b',
+				'del',
+				'u',
+				'p',
+				'a',
+				'code',
+				'pre',
+				'br',
+				'blockquote'
+			]
+		});
+	}
+	res.send(members);
+})
+
 //CONTACTS
 
 app.get('/api/contacts', async (req, res)=> {
@@ -830,6 +858,6 @@ app.use(function (err, req, res, next) {
   next(err)
 })
 
-// app.listen(process.env.PORT || 8080);
+app.listen(process.env.PORT || 8080);
 console.log("Ready.");
-module.exports = app;
+// module.exports = app;

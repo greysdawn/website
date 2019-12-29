@@ -17,18 +17,17 @@ import Page from './Pages/Comics/Page';
 class App extends Component {
   constructor() {
     super();
-    this.state = {projects: undefined, sysid: undefined, contacts: undefined, login: {name: undefined, pass: undefined}, user: undefined};
+    this.state = {projects: undefined, contacts: undefined, login: {name: undefined, pass: undefined}, user: undefined};
   }
   async componentDidMount() {
     var projects = (await axios('/api/projects')).data;
-    var sysid = (await axios('/api/sysid')).data;
     var contacts = (await axios('/api/contacts')).data;
     try {
       var user = (await axios('/api/user')).data;
     } catch(e) {
       user = undefined;
     }
-    this.setState({projects: projects, sysid: sysid.id, contacts: contacts, user: user});
+    this.setState({projects: projects, contacts: contacts, user: user});
   }
 
   handleChange = (name, e) => {
@@ -85,7 +84,7 @@ class App extends Component {
           <Router>
             <Route path="/" exact render={(props)=><Home {...props} list={this.state.projects} />}/>
             <Route path="/contact" render={(props)=><Contact {...props} list={this.state.contacts} />}/>
-            <Route path="/system" render={(props)=><System {...props} id={this.state.sysid} />} />
+            <Route path="/system" render={(props)=><System {...props}/>} />
             <Route path="/blog" exact render={(props)=><Blog {...props} />} />
             <Route path="/blog/post/:id" exact render={(props)=><Post {...props}/>} />
             <Route path="/comics" exact render={(props)=><Landing {...props}/>} />
