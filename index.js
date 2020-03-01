@@ -222,18 +222,17 @@ async function deleteUser(id) {
 //PROJECTS
 async function getProjects() {
 	return new Promise(res => {
-		db.query(`SELECT * FROM projects`,{
+		db.query(`SELECT * FROM projects`, {
 			id: String,
 			name: String,
 			tag: String,
 			description: String,
 			title: JSON.parse,
 			about: String,
-			github: String,
 			links: JSON.parse,
-			release_names: JSON.parse,
+			releases: JSON.parse,
 			gallery: JSON.parse
-		},(err,rows)=> {
+		}, (err,rows)=> {
 			if(err) {
 				console.log(err);
 				res(undefined);
@@ -246,7 +245,17 @@ async function getProjects() {
 
 async function getProject(id) {
 	return new Promise(res => {
-		db.query(`SELECT * FROM projects WHERE id=?`,[id],(err,rows)=> {
+		db.query(`SELECT * FROM projects WHERE id=?`,[id], {
+			id: String,
+			name: String,
+			tag: String,
+			description: String,
+			title: JSON.parse,
+			about: String,
+			links: JSON.parse,
+			releases: JSON.parse,
+			gallery: JSON.parse
+		}, (err,rows)=> {
 			if(err) {
 				console.log(err);
 				res(undefined);
@@ -683,7 +692,7 @@ app.post('/api/login', async (req,res)=> {
 
 app.get('/api/projects', async (req,res)=> {
 	var projects = await getProjects();
-	for(var i = 0; i < projects.length; i++) if(projects[i].releases) projects[i].links.push({label: "RELEASES", buttons: projects[i].releases});
+	for(var i = 0; i < projects.length; i++) if(projects[i].releases) projects[i].links[projects[i].links.length] = {label: "RELEASES", buttons: projects[i].releases};
 	res.send(projects);
 })
 
@@ -845,6 +854,6 @@ app.use(function (err, req, res, next) {
   next(err)
 })
 
-// app.listen(process.env.PORT || 8080);
+app.listen(process.env.PORT || 8080);
 console.log("Ready.");
 module.exports = app;
