@@ -14,8 +14,6 @@ class Project extends Component {
 	render() {
 		var path = this.state.path;
 		var p = this.state.project;
-		p.title = p.title;
-		console.log(p.title);
 		if(p) {
 			return (
 				<div className="App-container">

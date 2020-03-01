@@ -683,20 +683,7 @@ app.post('/api/login', async (req,res)=> {
 
 app.get('/api/projects', async (req,res)=> {
 	var projects = await getProjects();
-	await Promise.all(projects.map(async (proj,ind) => {
-		if(proj.github) {
-			var dat = await fetch(`https://api.github.com${proj.github.replace("/git/api","")}`);
-			var json = await dat.json();
-			var n = proj.links.length-1;
-			json.assets.forEach((a,i) => {
-				proj.links[n].buttons[i] = {name: proj.release_names[i], url: a.browser_download_url};
-			})
-			projects[ind] = proj;
-			return new Promise(res => {
-				setTimeout(()=> res(1), 100)
-			})
-		}
-	}))
+	for(var i = 0; i < projects.length; i++) if(projects[i].releases) projects[i].links.push({label: "RELEASES", buttons: projects[i].releases});
 	res.send(projects);
 })
 
