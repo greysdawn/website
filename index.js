@@ -64,7 +64,7 @@ function genCode(table, num) {
 //AUTH
 function userAuth(req, res, next) {
 	var user = (req.cookies.user ? JSON.parse(req.cookies.user) :
-								   {name: req.body.name, password: req.body.pass});
+			   {name: req.body.name, password: req.body.pass});
 	db.query(`SELECT * FROM users WHERE name=? AND password=?`,[user.name, user.password],(err,rows)=>{
 		if(err) {
 			console.log(err);
@@ -296,7 +296,6 @@ async function deleteProject(id) {
 }
 
 //SYSTEM
-
 async function getSysID() {
 	return new Promise(res => {
 		db.query(`SELECT * FROM extra WHERE key='sysid'`,(err, rows)=> {
@@ -324,7 +323,6 @@ async function updateSysID(id) {
 }
 
 //MISC
-
 async function getContacts() {
 	return new Promise(res => {
 		db.query(`SELECT * FROM contacts`,(err, rows)=> {
@@ -339,7 +337,6 @@ async function getContacts() {
 }
 
 //COMICS
-
 async function createComic(data) {
 	return new Promise(res => {
 		db.query(`INSERT INTO comics (hid, name, tagline, desc, story) VALUES (?, ?, ?, ?, ?)`,
@@ -363,7 +360,7 @@ async function getComics() {
 			} else {
 				var comics = {};
 				rows.forEach(cm => {
-					cm.images = fs.readdirSync(__dirname+'/Images/'+cm.hid);
+					cm.images = fs.readdirSync(__dirname+'/Images/comics/'+cm.hid);
 					if(comics[cm.story]) {
 						comics[cm.story].push(cm);
 					} else {
@@ -403,8 +400,78 @@ async function getComic(hid) {
 			comic.prev = index > 0 ? comics[index - 1].hid : undefined;
 			comic.next = index < comics.length - 1 ? comics[index + 1].hid : undefined;
 			comic.desc = conv.makeHtml(comic.desc);
-			comic.images = fs.readdirSync(__dirname+'/Images/'+comic.hid);
+			comic.images = fs.readdirSync(__dirname+'/Images/comics/'+comic.hid);
 			res(comic);
+		}
+	})
+}
+
+//FLAGS
+async function createFlag(data) {
+	return new Promise(res => {
+		db.query(`INSERT INTO flags (name, desc, category) VALUES (?, ?, ?)`,
+			[data.flagname, data.desc, data.category], (err, rows)=> {
+			if(err) {
+				console.log(err);
+				res(false)
+			} else {
+				res(true);
+			}
+		})
+	})
+}
+
+async function getFlags() {
+	return new Promise(res => {
+		db.query(`SELECT * FROM flags`, (err, rows) => {
+			if(err) {
+				console.log(err);
+				res(undefined);
+			} else {
+				var flags = {};
+				rows.forEach(fl => {
+					fl.images = fs.readdirSync(__dirname+'/Images/flags/'+fl.name);
+					if(flags[fl.category]) {
+						flags[fl.category].push(fl);
+					} else {
+						flags[fl.category] = [fl];
+					}
+				})
+				res(flags);
+			}
+		})
+	})
+}
+
+async function getRawFlags() {
+	return new Promise(res => {
+		db.query(`SELECT * FROM flags ORDER BY category, id`, (err, rows) => {
+			if(err) {
+				console.log(err);
+				res(undefined);
+			} else {
+				res(rows);
+			}
+		})
+	})
+}
+
+async function getFlag(name) {
+	return new Promise(async res => {
+		var fl = await getFlags();
+		var flags = [];
+		Object.keys(fl).forEach(f => {
+			fl[f].map(x => flags.push(x));
+		})
+		var flag = flags.find(x => x.name == name);
+		if(!flag) res(undefined);
+		else {
+			var index = flags.indexOf(flag);
+			flag.prev = index > 0 ? flags[index - 1].name : undefined;
+			flag.next = index < flags.length - 1 ? flags[index + 1].name : undefined;
+			flag.desc = conv.makeHtml(flag.desc);
+			flag.images = fs.readdirSync(__dirname+'/Images/flags/'+flag.name);
+			res(flag);
 		}
 	})
 }
@@ -533,12 +600,48 @@ app.get('/comics/:hid', async (req,res)=>{
 		index = index.replace('$OEMBED', 'oembed.json');
 		res.send(index);
 	} else {
-		index = index.replace('$TITLE', '404 | Send Us into the Light');
+		index = index.replace('$TITLE', 'Comic | Send Us into the Light');
 		index = index.replace('$DESC', 'Project not found');
-		index = index.replace('$TWITDESC', 'Project not found');
+		index = index.replace('$TWITDESC', 'Comic not found');
 		index = index.replace('$TWITTITLE', '404 | Send Us into the Light');
 		index = index.replace('$OGTITLE', '404 | Send Us into the Light');
-		index = index.replace('$OGDESC', 'Project not found');
+		index = index.replace('$OGDESC', 'Comic not found');
+		index = index.replace('$OEMBED', 'oembed.json');
+		res.send(index);
+	}
+});
+
+app.get('/flags', async (req,res)=>{
+	var index = fs.readFileSync(path.join(__dirname+'/frontend/build/index.html'),'utf8');
+	index = index.replace('$TITLE', 'Flags | Send Us into the Light');
+	index = index.replace('$DESC', 'Home of the Grey Skies');
+	index = index.replace('$TWITDESC', 'Home of the Grey Skies');
+	index = index.replace('$TWITTITLE', 'Flags | Send Us into the Light');
+	index = index.replace('$OGTITLE', 'Flags | Send Us into the Light');
+	index = index.replace('$OGDESC', 'Home of the Grey Skies');
+	index = index.replace('$OEMBED', 'oembed.json');
+	res.send(index);
+});
+
+app.get('/flags/:name', async (req,res)=>{
+	var index = fs.readFileSync(path.join(__dirname+'/frontend/build/index.html'),'utf8');
+	var flag = await getFlag(req.params.name);
+	if(flag) {
+		index = index.replace('$TITLE', flag.name+' Flag | Send Us into the Light');
+		index = index.replace('$DESC', 'Home of the Grey Skies');
+		index = index.replace('$TWITDESC', 'Home of the Grey Skies');
+		index = index.replace('$TWITTITLE', flag.name+' Flag | Send Us into the Light');
+		index = index.replace('$OGTITLE', flag.name+' Flag | Send Us into the Light');
+		index = index.replace('$OGDESC', 'Home of the Grey Skies');
+		index = index.replace('$OEMBED', 'oembed.json');
+		res.send(index);
+	} else {
+		index = index.replace('$TITLE', '404 | Send Us into the Light');
+		index = index.replace('$DESC', 'Flag not found');
+		index = index.replace('$TWITDESC', 'Flag not found');
+		index = index.replace('$TWITTITLE', '404 | Send Us into the Light');
+		index = index.replace('$OGTITLE', '404 | Send Us into the Light');
+		index = index.replace('$OGDESC', 'Flag not found');
 		index = index.replace('$OEMBED', 'oembed.json');
 		res.send(index);
 	}
@@ -793,14 +896,14 @@ app.post('/api/comic', upload.array('panels',10), async (req,res)=> {
 	console.log(req.files)
 
 	try {
-		fs.mkdirSync(__dirname+"/Images/"+req.body.hid);
+		fs.mkdirSync(__dirname+"/Images/comics/"+req.body.hid);
 	} catch(e) {
 		console.log(e);
 		return res.status(500).send({err: "couldn't create folder"});
 	}
 
 	req.files.forEach((f) => {
-		fs.writeFileSync(`${__dirname}/Images/${req.body.hid}/${f.originalname}`, f.buffer);
+		fs.writeFileSync(`${__dirname}/Images/comics/${req.body.hid}/${f.originalname}`, f.buffer);
 	})
 
 	var success = await createComic(req.body);
@@ -820,6 +923,44 @@ app.get('/api/comic/:hid', async (req,res)=> {
 	res.send(comic);
 })
 
+//FLAGS
+//(basically acts the same as comics)
+
+app.post('/api/flag', upload.array('panels',10), async (req,res)=> {
+	if(!req.verified) return res.status(401).send('UNAUTHORIZED');
+	
+	var flag = await getFlag(req.body.flagname);
+	if(flag) return res.status(400).send({err: "name taken"});
+	console.log(req.files)
+
+	try {
+		fs.mkdirSync(__dirname+"/Images/flags/"+req.body.flagname);
+	} catch(e) {
+		console.log(e);
+		return res.status(500).send({err: "couldn't create folder"});
+	}
+
+	req.files.forEach((f) => {
+		fs.writeFileSync(`${__dirname}/Images/flags/${req.body.flagname}/${f.originalname}`, f.buffer);
+	})
+
+	var success = await createFlag(req.body);
+
+	if(success) res.status(200).send({msg: "saved"});
+	else res.status(500).send({err: "couldn't save data"});
+
+})
+
+app.get('/api/flags', async (req,res)=> {
+	var Flags = await getFlags();
+	res.send(Flags);
+})
+
+app.get('/api/flag/:name', async (req,res)=> {
+	var flag = await getFlag(req.params.name);
+	res.send(flag);
+})
+
 
 //OTHER APIS
 app.get("/git/api/*",async (req,res)=>{
@@ -835,7 +976,8 @@ app.get("/pk/api/*",async (req,res)=>{
 })
 
 app.use(express.static(path.join(__dirname, 'frontend/build')));
-app.use(express.static(path.join(__dirname, 'Images')));
+app.use(express.static(path.join(__dirname, 'Images/comics')));
+app.use(express.static(path.join(__dirname, 'Images/flags')));
 
 app.use("/*", async (req, res, next)=> {
 	var index = fs.readFileSync(path.join(__dirname+'/frontend/build/index.html'),'utf8');

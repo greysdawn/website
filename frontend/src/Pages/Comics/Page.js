@@ -1,7 +1,7 @@
 import React, {Component, Fragment as Frag} from 'react';
 import axios from 'axios';
 
-class Page extends Component {
+class CPage extends Component {
 	constructor(props) {
 		super(props);
 
@@ -56,4 +56,4 @@ class Page extends Component {
 	}
 }
 
-export default Page;
+export default CPage;

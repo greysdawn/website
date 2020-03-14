@@ -11,8 +11,11 @@ import Blog     from './Pages/Blog';
 import Post     from './Pages/Post';
 import Admin    from './Pages/Admin';
 
-import Landing from './Pages/Comics/Landing';
-import Page from './Pages/Comics/Page';
+import CLanding from './Pages/Comics/Landing';
+import CPage from './Pages/Comics/Page';
+
+import FLanding from './Pages/Flags/Landing';
+import FPage from './Pages/Flags/Page';
 
 class App extends Component {
   constructor() {
@@ -61,7 +64,7 @@ class App extends Component {
   }
 
   render() {
-    var links = ["home","contact","system","blog","comics"];
+    var links = ["home","contact","system","blog","comics","flags"];
     if(!this.state.projects) {
       return null;
     } else {
@@ -72,9 +75,7 @@ class App extends Component {
             <ul>
             {links.map((v,i)=>{
               return (
-                <li key={i}
-                    style={{animationDelay: (.5*i)+"s"}}
-                >
+                <li key={i}>
                   <a href={`/${v == "home" ? "" : v}`}>{v}</a>
                 </li>
               );
@@ -87,8 +88,10 @@ class App extends Component {
             <Route path="/system" render={(props)=><System {...props}/>} />
             <Route path="/blog" exact render={(props)=><Blog {...props} />} />
             <Route path="/blog/post/:id" exact render={(props)=><Post {...props}/>} />
-            <Route path="/comics" exact render={(props)=><Landing {...props}/>} />
-            <Route path="/comics/:hid" exact render={(props)=><Page {...props}/>} />
+            <Route path="/comics" exact render={(props)=><CLanding {...props}/>} />
+            <Route path="/comics/:hid" exact render={(props)=><CPage {...props}/>} />
+            <Route path="/flags" exact render={(props)=><FLanding {...props}/>} />
+            <Route path="/flags/:name" exact render={(props)=><FPage {...props}/>} />
             
             {
               this.state.user ?
@@ -115,7 +118,7 @@ class App extends Component {
             <Route path="/project/:id" render={(props)=><Project {...props} project={this.state.projects.find(p => p.id == props.match.params.id)}/>} />
           </Router>
           <footer>
-            © the grey skies 2019
+            © the grey skies 2020
           </footer>
         </div>
       );

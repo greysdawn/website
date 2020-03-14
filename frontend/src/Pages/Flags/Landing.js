@@ -1,39 +1,39 @@
 import React, {Component, Fragment as Frag} from 'react';
 import axios from 'axios';
-import Story from './Story';
-import './Comics.css';
+import Category from './Category';
+import './Flags.css';
 
-class CLanding extends Component {
+class FLanding extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			comics: null,
+			flags: null,
 			fetched: false
 		}
 	}
 
 	async componentDidMount() {
-		var c = await axios('/api/comics');
+		var c = await axios('/api/flags');
 		if(c.status == 200) {
-			this.setState({comics: c.data, fetched: true});
+			this.setState({flags: c.data, fetched: true});
 		} else {
 			this.setState({fetched: true});
 		}
 	}
 
 	render() {
-		var comics = this.state.comics;
+		var flags = this.state.flags;
 		return (
 			<div className="App-container">
 				<section className="App-top">
-	              <h1>Grey Skies <span className="App-light">Silver Lining</span></h1>
-	              <p>A collection of comics we've made</p>
+	              <h1>Flag <span className="App-light">Emporium</span></h1>
+	              <p>All the flags we've made</p>
 	       		 </section>
 	        	<section className="Comics-list">
-					{comics ? Object.keys(comics).map((c) => {
+					{flags ? Object.keys(flags).map((f) => {
 						return (
-							<Story key={c} name={c} comics={comics[c]}/>
+							<Category key={f} name={f} flags={flags[f]}/>
 						);
 					}) : (this.state.fetched ? <p>Something went wrong</p> : <p>Loading...</p>)}
 				</section>
@@ -42,4 +42,4 @@ class CLanding extends Component {
 	}
 }
 
-export default CLanding;
+export default FLanding;

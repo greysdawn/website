@@ -236,11 +236,11 @@ code {
 
 @keyframes App-listanim {
   from {
-    right: 500px;
+    top: 5px;
     opacity: 0;
   }
   to {
-    right: 0px;
+    top: 0;
     opacity: 1;
   }
 }
