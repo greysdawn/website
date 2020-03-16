@@ -6,13 +6,13 @@ class FPage extends Component {
 		super(props);
 
 		this.state = {
-			name: this.props.match.params.name,
+			hid: this.props.match.params.hid,
 			fetched: false
 		}
 	}
 
 	async componentDidMount() {
-		var f = await axios('/api/flag/'+this.state.name);
+		var f = await axios('/api/flag/'+this.state.hid);
 		console.log(f.data);
 		if(f.status == 200) {
 			this.setState({flag: f.data, fetched: true})
@@ -33,18 +33,20 @@ class FPage extends Component {
 				<div className="Flags-flag">
 				{
 					flag.images.map((img, i) => {
+						if(img == "thumb.png") return null;
 						var imgname = img.replace(".png","").replace("-"," ").toUpperCase();
 						return (
-							<div className="Flag-imgwrapper">
+							<div className="Flags-imgwrapper">
 							<p>{imgname}</p>
-							<img src={`/${flag.name}/${img}`} key={i} alt={`${flag.name} - ${imgname.toLowerCase()} variant`}/>
+							<a href={`/${flag.hid}/${img}`} target="_blank">
+								<img src={`/${flag.hid}/${img}`} key={i} alt={`${flag.name} - ${imgname.toLowerCase()} variant`}/>
+							</a>
 							</div>
 						)
 					})
 				}
 				</div>
 				<div className="Flags-description">
-				<h1 style={{textAlign: "center"}}>Description</h1>
 				<p dangerouslySetInnerHTML={{__html: flag.desc}}></p>
 				</div>
 				<div className="Flags-buttons">

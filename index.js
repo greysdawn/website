@@ -409,12 +409,13 @@ async function getComic(hid) {
 //FLAGS
 async function createFlag(data) {
 	return new Promise(res => {
-		db.query(`INSERT INTO flags (name, desc, category) VALUES (?, ?, ?)`,
-			[data.flagname, data.desc, data.category], (err, rows)=> {
+		db.query(`INSERT INTO flags (hid, name, category) VALUES (?, ?, ?)`,
+			[data.hid, data.flagname, data.category], (err, rows)=> {
 			if(err) {
 				console.log(err);
 				res(false)
 			} else {
+
 				res(true);
 			}
 		})
@@ -430,7 +431,12 @@ async function getFlags() {
 			} else {
 				var flags = {};
 				rows.forEach(fl => {
-					fl.images = fs.readdirSync(__dirname+'/Images/flags/'+fl.name);
+					var files = fs.readdirSync(__dirname+'/Images/flags/'+fl.hid);
+					fl.images = [];
+					files.forEach(f => {
+						if(f.endsWith(".png")) fl.images.push(f);
+						else fl.desc = f;
+					})
 					if(flags[fl.category]) {
 						flags[fl.category].push(fl);
 					} else {
@@ -456,21 +462,27 @@ async function getRawFlags() {
 	})
 }
 
-async function getFlag(name) {
+async function getFlag(hid) {
 	return new Promise(async res => {
 		var fl = await getFlags();
 		var flags = [];
 		Object.keys(fl).forEach(f => {
 			fl[f].map(x => flags.push(x));
 		})
-		var flag = flags.find(x => x.name == name);
+		var flag = flags.find(x => x.hid.toLowerCase() == hid.toLowerCase());
 		if(!flag) res(undefined);
 		else {
 			var index = flags.indexOf(flag);
-			flag.prev = index > 0 ? flags[index - 1].name : undefined;
-			flag.next = index < flags.length - 1 ? flags[index + 1].name : undefined;
-			flag.desc = conv.makeHtml(flag.desc);
-			flag.images = fs.readdirSync(__dirname+'/Images/flags/'+flag.name);
+			flag.prev = index > 0 ? flags[index - 1].hid : undefined;
+			flag.next = index < flags.length - 1 ? flags[index + 1].hid : undefined;
+			var files = fs.readdirSync(__dirname+'/Images/flags/'+flag.hid);
+			flag.images = [];
+			files.forEach(f => {
+				if(f.endsWith(".png")) flag.images.push(f);
+				else flag.desc = fs.readFileSync(`${__dirname}/Images/flags/${flag.hid}/${f}`);
+			})
+
+			flag.desc = conv.makeHtml(flag.desc.toString());
 			res(flag);
 		}
 	})
@@ -623,9 +635,9 @@ app.get('/flags', async (req,res)=>{
 	res.send(index);
 });
 
-app.get('/flags/:name', async (req,res)=>{
+app.get('/flags/:hid', async (req,res)=>{
 	var index = fs.readFileSync(path.join(__dirname+'/frontend/build/index.html'),'utf8');
-	var flag = await getFlag(req.params.name);
+	var flag = await getFlag(req.params.hid);
 	if(flag) {
 		index = index.replace('$TITLE', flag.name+' Flag | Send Us into the Light');
 		index = index.replace('$DESC', 'Home of the Grey Skies');
@@ -929,20 +941,26 @@ app.get('/api/comic/:hid', async (req,res)=> {
 app.post('/api/flag', upload.array('panels',10), async (req,res)=> {
 	if(!req.verified) return res.status(401).send('UNAUTHORIZED');
 	
-	var flag = await getFlag(req.body.flagname);
+	var flag = await getFlag(req.body.hid);
 	if(flag) return res.status(400).send({err: "name taken"});
-	console.log(req.files)
 
 	try {
-		fs.mkdirSync(__dirname+"/Images/flags/"+req.body.flagname);
+		fs.mkdirSync(__dirname+"/Images/flags/"+req.body.hid);
 	} catch(e) {
 		console.log(e);
 		return res.status(500).send({err: "couldn't create folder"});
 	}
 
 	req.files.forEach((f) => {
-		fs.writeFileSync(`${__dirname}/Images/flags/${req.body.flagname}/${f.originalname}`, f.buffer);
+		fs.writeFileSync(`${__dirname}/Images/flags/${req.body.hid}/${f.originalname}`, f.buffer);
 	})
+
+	fs.writeFileSync(`${__dirname}/Images/flags/${req.body.hid}/description.md`, req.body.desc);
+
+	if(!req.files.find(f => f.originalname == "thumb.png")) {
+		var thumb = req.files.find(f => ["simplified.png", "full.png"].includes(f.originalname));
+		if(thumb) fs.writeFileSync(`${__dirname}/Images/flags/${req.body.hid}/thumb.png`, thumb.buffer);
+	}
 
 	var success = await createFlag(req.body);
 
@@ -956,8 +974,8 @@ app.get('/api/flags', async (req,res)=> {
 	res.send(Flags);
 })
 
-app.get('/api/flag/:name', async (req,res)=> {
-	var flag = await getFlag(req.params.name);
+app.get('/api/flag/:hid', async (req,res)=> {
+	var flag = await getFlag(req.params.hid);
 	res.send(flag);
 })
 

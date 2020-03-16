@@ -14,7 +14,7 @@ class Thumbnail extends Component {
 	render() {
 		var flag = this.state.flag;
 		return (
-			<a href={`/flags/${flag.name}`} className="Flags-thumbnail" style={{backgroundImage: `url('/${flag.name}/simplified.png')`}}>
+			<a href={`/flags/${flag.hid}`} className="Flags-thumbnail" style={{backgroundImage: `url('/${flag.hid}/thumb.png')`}}>
 				<h1>{flag.name}</h1>
 			</a>
 		)

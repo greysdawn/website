@@ -42,6 +42,7 @@
 	border-radius: 10px;
 	position: relative;
 	background-position: center;
+	background-size: cover;
     text-align: center;
     word-break: break-word;
     line-height: 256px;
@@ -73,11 +74,17 @@
 .Flags-flag {
 	max-width: 100%;
 	background-color: #aaa;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
 }
 
 .Flags-flag img {
 	margin: 10px;
 	max-width: 90%;
+	background: rgba(0,0,0,.1);
 }
 
 .Flags-buttons {
@@ -102,6 +109,14 @@
 .Flags-button.Flags-disabled {
 	background-color: #555;
 	color: #aaa;
+}
+
+.Flags-imgwrapper {
+	width: 50%;
+}
+
+.Flags-imgwrapper p {
+	font-size: 18px;
 }
 
 @media (max-width: 900px) {

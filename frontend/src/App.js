@@ -91,7 +91,7 @@ class App extends Component {
             <Route path="/comics" exact render={(props)=><CLanding {...props}/>} />
             <Route path="/comics/:hid" exact render={(props)=><CPage {...props}/>} />
             <Route path="/flags" exact render={(props)=><FLanding {...props}/>} />
-            <Route path="/flags/:name" exact render={(props)=><FPage {...props}/>} />
+            <Route path="/flags/:hid" exact render={(props)=><FPage {...props}/>} />
             
             {
               this.state.user ?
