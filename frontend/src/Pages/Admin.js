@@ -39,6 +39,7 @@ class Admin extends Component {
 					<Router>
 						<Route path='/admin/createpost' exact render={(props)=><CreatePost {...props} user={this.state.user}/>} />
 						<Route path='/admin/createuser' exact render={(props)=><CreateUser {...props} user={this.state.user}/>} />
+						<Route path='/admin/createcomic' exact render={(props)=><CreateComic {...props} user={this.state.user}/>} />
 						<Route path='/admin/createflag' exact render={(props)=><CreateFlag {...props} user={this.state.user}/>} />
 					</Router>
 				</div>
