@@ -35,6 +35,7 @@ body {
   height: 5vh;
   width: 100%;
   position: fixed;
+  left: 0;
   display: flex;
   flex-direction: row;
   align-items: center;
