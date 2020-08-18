@@ -22,7 +22,7 @@ class Home extends Component {
 		          <section className="App-about">
 		            <h1>ABOUT</h1>
 		            <div className="App-info">
-		            <p>My name is Grey Himmel. I am transmasculine and prefer he/him or they/them pronouns. As of writing this, I am 19 years old and working on a handful of passion projects. To date I have created several Discord bots, coded this website from scratch, and contributed to a few other projects.</p>
+		            <p>My name is Grey Himmel. I am transmasculine and prefer he/him or they/them pronouns. As of writing this, I am 20 years old and working on a handful of passion projects. To date I have created several Discord bots, coded this website from scratch, and contributed to a few other projects.</p>
 		            <p>I also consider myself an activist, mainly an advocate for better health care, especially mental health care, and rights for marginalized people. As a trans person living with Dissociative Identity Disorder, it's a shame knowing that I have to fight to prove myself worthy of getting a job and even just existing. I hope to make that fight easier- or, rather, non-existent- for future generations.</p>
 		            <p>Aside from coding projects, I like to make music and art. Soon I hope to make more Youtube videos and stream on Twitch as well. I also work on games from time to time, mainly using the LOVE2D framework. I'm also part of a robotics team, and am hoping to become a programming mentor.</p>
 		            </div>
