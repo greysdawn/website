@@ -563,29 +563,29 @@ app.get('/blog/post/:id',async (req,res)=>{
 	}
 });
 
-app.get('/project/:id', async (req,res)=>{
-	var index = fs.readFileSync(path.join(__dirname+'/frontend/build/index.html'),'utf8');
-	var proj = await getProject(req.params.id);
-	if(proj) {
-		index = index.replace('$TITLE', proj.name+' | Send Us into the Light');
-		index = index.replace('$DESC', 'Home of the Grey Skies');
-		index = index.replace('$TWITDESC', 'Home of the Grey Skies');
-		index = index.replace('$TWITTITLE', proj.name+' | Send Us into the Light');
-		index = index.replace('$OGTITLE', proj.name+' | Send Us into the Light');
-		index = index.replace('$OGDESC', 'Home of the Grey Skies');
-		index = index.replace('$OEMBED', 'oembed.json');
-		res.send(index);
-	} else {
-		index = index.replace('$TITLE', '404 | Send Us into the Light');
-		index = index.replace('$DESC', 'Project not found');
-		index = index.replace('$TWITDESC', 'Project not found');
-		index = index.replace('$TWITTITLE', '404 | Send Us into the Light');
-		index = index.replace('$OGTITLE', '404 | Send Us into the Light');
-		index = index.replace('$OGDESC', 'Project not found');
-		index = index.replace('$OEMBED', 'oembed.json');
-		res.send(index);
-	}
-});
+// app.get('/project/:id', async (req,res)=>{
+// 	var index = fs.readFileSync(path.join(__dirname+'/frontend/build/index.html'),'utf8');
+// 	var proj = await getProject(req.params.id);
+// 	if(proj) {
+// 		index = index.replace('$TITLE', proj.name+' | Send Us into the Light');
+// 		index = index.replace('$DESC', 'Home of the Grey Skies');
+// 		index = index.replace('$TWITDESC', 'Home of the Grey Skies');
+// 		index = index.replace('$TWITTITLE', proj.name+' | Send Us into the Light');
+// 		index = index.replace('$OGTITLE', proj.name+' | Send Us into the Light');
+// 		index = index.replace('$OGDESC', 'Home of the Grey Skies');
+// 		index = index.replace('$OEMBED', 'oembed.json');
+// 		res.send(index);
+// 	} else {
+// 		index = index.replace('$TITLE', '404 | Send Us into the Light');
+// 		index = index.replace('$DESC', 'Project not found');
+// 		index = index.replace('$TWITDESC', 'Project not found');
+// 		index = index.replace('$TWITTITLE', '404 | Send Us into the Light');
+// 		index = index.replace('$OGTITLE', '404 | Send Us into the Light');
+// 		index = index.replace('$OGDESC', 'Project not found');
+// 		index = index.replace('$OEMBED', 'oembed.json');
+// 		res.send(index);
+// 	}
+// });
 
 app.get('/comics', async (req,res)=>{
 	var index = fs.readFileSync(path.join(__dirname+'/frontend/build/index.html'),'utf8');
@@ -805,47 +805,47 @@ app.post('/api/login', async (req,res)=> {
 
 //PROJECTS
 
-app.get('/api/projects', async (req,res)=> {
-	var projects = await getProjects();
-	for(var i = 0; i < projects.length; i++) if(projects[i].releases) projects[i].links[projects[i].links.length] = {label: "RELEASES", buttons: projects[i].releases};
-	res.send(projects);
-})
+// app.get('/api/projects', async (req,res)=> {
+// 	var projects = await getProjects();
+// 	for(var i = 0; i < projects.length; i++) if(projects[i].releases) projects[i].links[projects[i].links.length] = {label: "RELEASES", buttons: projects[i].releases};
+// 	res.send(projects);
+// })
 
-app.get('/api/project/:id', async (req,res)=> {
-	var proj = await getProject(req.params.id);
-	if(proj) res.send(proj);
-	else res.status(404).send('NOT FOUND');
-})
+// app.get('/api/project/:id', async (req,res)=> {
+// 	var proj = await getProject(req.params.id);
+// 	if(proj) res.send(proj);
+// 	else res.status(404).send('NOT FOUND');
+// })
 
-app.post('/api/project', async (req,res)=> {
-	if(req.verified) {
-		var created = await createProject(req.body);
-		if(created) res.send('OK');
-		else res.status(500).send('ERR');
-	} else {
-		res.status(401).send("UNAUTHORIZED");
-	}
-})
+// app.post('/api/project', async (req,res)=> {
+// 	if(req.verified) {
+// 		var created = await createProject(req.body);
+// 		if(created) res.send('OK');
+// 		else res.status(500).send('ERR');
+// 	} else {
+// 		res.status(401).send("UNAUTHORIZED");
+// 	}
+// })
 
-app.get('/api/project/:id/delete', async (req,res)=> {
-	if(req.verified) {
-		var deleted = await deleteProject(req.params.id);
-		if(deleted) res.send('OK');
-		else res.status(500).send('ERR');
-	} else {
-		res.status(401).send("UNAUTHORIZED");
-	}
-})
+// app.get('/api/project/:id/delete', async (req,res)=> {
+// 	if(req.verified) {
+// 		var deleted = await deleteProject(req.params.id);
+// 		if(deleted) res.send('OK');
+// 		else res.status(500).send('ERR');
+// 	} else {
+// 		res.status(401).send("UNAUTHORIZED");
+// 	}
+// })
 
-app.delete('/api/project/:id', async (req,res)=> {
-	if(req.verified) {
-		var deleted = await deleteProject(req.params.id);
-		if(deleted) res.send('OK');
-		else res.status(500).send('ERR');
-	} else {
-		res.status(401).send("UNAUTHORIZED");
-	}
-})
+// app.delete('/api/project/:id', async (req,res)=> {
+// 	if(req.verified) {
+// 		var deleted = await deleteProject(req.params.id);
+// 		if(deleted) res.send('OK');
+// 		else res.status(500).send('ERR');
+// 	} else {
+// 		res.status(401).send("UNAUTHORIZED");
+// 	}
+// })
 
 //SYSID
 
@@ -996,6 +996,7 @@ app.get("/pk/api/*",async (req,res)=>{
 app.use(express.static(path.join(__dirname, 'frontend/build')));
 app.use(express.static(path.join(__dirname, 'Images/comics')));
 app.use(express.static(path.join(__dirname, 'Images/flags')));
+app.use(express.static(path.join(__dirname, 'Images/projects')));
 
 app.use("/*", async (req, res, next)=> {
 	var index = fs.readFileSync(path.join(__dirname+'/frontend/build/index.html'),'utf8');

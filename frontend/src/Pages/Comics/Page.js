@@ -9,6 +9,8 @@ class CPage extends Component {
 			hid: this.props.match.params.hid,
 			fetched: false
 		}
+
+		this.ref = React.createRef();
 	}
 
 	async componentDidMount() {
@@ -18,6 +20,14 @@ class CPage extends Component {
 		} else {
 			this.setState({fetched: true});
 		}
+	}
+
+	jump = (e) => {
+		e.preventDefault();
+		this.ref.current.scrollIntoView({
+			behavior: 'smooth',
+          	block: 'start'
+		});
 	}
 
 	render() {
@@ -30,14 +40,15 @@ class CPage extends Component {
 	              <p><em>{comic.tagline}</em></p>
 	       		</section>
 	       		<section className="Comics-page">
+	       		<button className="Comics-button" onClick={this.jump}>Jump to descriptions</button>
 				<div className="Comics-comic">
 				{
 					comic.images.map((img, i) => {
-						if(img != "thumb.png") return <img src={`/${comic.hid}/${img}`} key={i} alt={`panel ${i+1}`}/>
+						if(img != "thumb.png" && img.endsWith('.png')) return <img src={`/${comic.hid}/${img}`} key={i} alt={`panel ${i+1}`}/>
 					})
 				}
 				</div>
-				<div className="Comics-description">
+				<div className="Comics-description" ref={this.ref}>
 				<h1 style={{textAlign: "center"}}>Description</h1>
 				<p dangerouslySetInnerHTML={{__html: comic.desc}}></p>
 				</div>

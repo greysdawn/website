@@ -9,6 +9,8 @@ class FPage extends Component {
 			hid: this.props.match.params.hid,
 			fetched: false
 		}
+
+		this.ref = React.createRef();
 	}
 
 	async componentDidMount() {
@@ -21,6 +23,14 @@ class FPage extends Component {
 		}
 	}
 
+	jump = (e) => {
+		e.preventDefault();
+		this.ref.current.scrollIntoView({
+			behavior: 'smooth',
+          	block: 'start'
+		});
+	}
+
 	render() {
 		var flag = this.state.flag;
 		if(flag) {
@@ -30,6 +40,7 @@ class FPage extends Component {
 	              <h1>{flag.name} Flag</h1>
 	       		</section>
 	       		<section className="Flags-page">
+	       		<button className="Flags-button" onClick={this.jump}>Jump to descriptions</button>
 				<div className="Flags-flag">
 				{
 					flag.images.map((img, i) => {
@@ -46,7 +57,7 @@ class FPage extends Component {
 					})
 				}
 				</div>
-				<div className="Flags-description">
+				<div className="Flags-description" ref={this.ref}>
 				<p dangerouslySetInnerHTML={{__html: flag.desc}}></p>
 				</div>
 				<div className="Flags-buttons">
