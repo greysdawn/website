@@ -32,6 +32,7 @@ const chars = process.env.CHARACTERS.split("");
 
 //FUNCTIONS
 
+app.utils = {};
 app.utils.genCode = (table, num) => {
 	var codestring = "";
 	var codenum = 0;
