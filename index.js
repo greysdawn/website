@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookparse());
 
-app.stripper = const stripper	= require('sanitize-html');
+app.stripper = require('sanitize-html');
 
 showdown.setOption('simplifiedAutoLink', true);
 showdown.setOption('simpleLineBreaks', true);
