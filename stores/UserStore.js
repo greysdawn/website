@@ -116,6 +116,22 @@ class UserStore {
 			res();
 		})
 	}
+
+	async auth(name, pass) {
+		return new Promise(async (res, rej) => {
+			try {
+				var data = await this.db.query(`SELECT * FROM users WHERE name = $1 AND password = $2`, [name, pass]);
+			} catch(e) {
+				console.log(e);
+				return rej(e.message);
+			}
+			
+			if(data.rows?.[0]) {
+				delete data.rows[0].password;
+				res(data.rows[0]);
+			} else res(undefined);
+		})
+	}
 }
 
 module.exports = (app, db) => new UserStore(app, db);

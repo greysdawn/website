@@ -16,8 +16,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookparse());
 
-app.use(userAuth);
-
 app.stripper = const stripper	= require('sanitize-html');
 
 showdown.setOption('simplifiedAutoLink', true);
@@ -52,6 +50,22 @@ async function setup() {
 	for(var file of files) {
 		routes[file.slice(0, -3)] = require(__dirname+'/routes/'+file)(app);
 	}
+
+	app.use((req, res, next) => {
+		var user = (req.cookies.user ? JSON.parse(req.cookies.user) :
+				   {name: req.body.name, password: req.body.pass});
+	
+		app.stores.users.auth(user.name, user.password)
+		.then(u => {
+			if(u) {
+				req.verified = true;
+				req.user = u;
+			} else {
+				req.verified = false;
+			}
+			next()
+		})
+	});
 
 	app.use(express.static(path.join(__dirname, 'frontend/build')));
 	app.use(express.static(path.join(__dirname, 'Images/comics')));
