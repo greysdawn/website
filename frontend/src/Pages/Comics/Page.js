@@ -50,7 +50,7 @@ class CPage extends Component {
 				</div>
 				<div className="Comics-description" ref={this.ref}>
 				<h1 style={{textAlign: "center"}}>Description</h1>
-				<p dangerouslySetInnerHTML={{__html: comic.desc}}></p>
+				<p dangerouslySetInnerHTML={{__html: comic.description}}></p>
 				</div>
 				<div className="Comics-buttons">
 				<a className={"Comics-button"+(comic.prev ? "" : " Comics-disabled")} href={comic.prev ? `/comics/${comic.prev}` : ''}>Previous</a>

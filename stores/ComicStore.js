@@ -13,10 +13,10 @@ class ComicStore {
 					hid,
 					name,
 					tagline,
-					desc,
+					description,
 					story
 				) VALUES ($1,$2,$3,$4,$5)`,
-				[hid, data.name, data.tagline, data.desc, data.story])
+				[hid, data.name, data.tagline, data.description, data.story])
 			} catch(e) {
 				console.log(e);
 		 		return rej(e.message);
@@ -33,10 +33,10 @@ class ComicStore {
 					hid,
 					name,
 					tagline,
-					desc,
+					description,
 					story
 				) VALUES ($1,$2,$3,$4,$5)`,
-				[hid, data.name, data.tagline, data.desc, data.story])
+				[hid, data.name, data.tagline, data.description, data.story])
 			} catch(e) {
 				console.log(e);
 		 		return rej(e.message);
@@ -101,7 +101,7 @@ class ComicStore {
 				var comics = {};
 				for(var cm of data.rows) {
 					cm.images = fs.readdirSync(__dirname+'../Images/comics/'+cm.hid);
-					cm.desc = this.app.conv.makeHtml(cm.desc);
+					cm.description = this.app.conv.makeHtml(cm.description);
 					if(comics[cm.story]) {
 						comics[cm.story].push(cm);
 					} else {
