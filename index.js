@@ -5,7 +5,6 @@ const path		= require('path');
 const dblite	= require('dblite');
 const showdown	= require('showdown');
 const cookparse	= require('cookie-parser')
-const multer 	= require('multer');
 const axios 	= require('axios');
 
 require('dotenv').config();
@@ -15,6 +14,18 @@ const app	= express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookparse());
+
+const multer 	= require('multer');
+var memstore = multer.memoryStorage();
+app.upload = multer({
+	storage: memstore,
+	fileFiler: (req, file, cb) => {
+		if(req.path == "/api/comic" && (!file.mimetype === "image/*" || !req.verified)) cb(null, false);
+		else if(req.path == "/api/comic" && file.mimetype === "image/*" && req.verified) cb(null, true);
+		else if(req.path == "/api/flag" && ["image/*", "text/*"].includes(file.mimetype) && req.verified) cb(null, true);
+		else cb(null, false);
+	}
+});
 
 app.stripper = require('sanitize-html');
 
@@ -45,7 +56,7 @@ app.utils.genCode = (table, num) => {
 }
 
 async function setup() {
-	app.db = await require(__dirname + "/stores/__db");
+	app.db = await require(__dirname + "/stores/__db")(app);
 
 	var files = fs.readdirSync(__dirname + "/routes");
 	for(var file of files) {
@@ -53,7 +64,7 @@ async function setup() {
 	}
 
 	app.use((req, res, next) => {
-		var user = (req.cookies.user ? JSON.parse(req.cookies.user) :
+		var user = (req.cookies?.user ? JSON.parse(req.cookies.user) :
 				   {name: req.body.name, password: req.body.pass});
 	
 		app.stores.users.auth(user.name, user.password)

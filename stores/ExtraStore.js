@@ -1,7 +1,5 @@
 class ExtraStore {
 	constructor(app, db) {
-		super();
-
 		this.db = db;
 		this.app = app;
 	};

@@ -1,17 +1,17 @@
 var fs = require('fs');
 var {Pool} = require('pg');
 
-module.exports = (app) => {
+module.exports = async (app) => {
 	const db = new Pool();
 
 	//the "extra" table is cursed just saying
-	db.query(`
+	await db.query(`
 		CREATE TABLE IF NOT EXISTS comics (
 			id 			SERIAL PRIMARY KEY,
 			hid 		TEXT,
 			name 		TEXT,
 			tagline 	TEXT,
-			desc 		TEXT,
+			description TEXT,
 			story 		TEXT
 		);
 
@@ -21,7 +21,7 @@ module.exports = (app) => {
 			url 		TEXT
 		);
 
-		CREATE TABLE IF NOT EXISTS extra (
+		CREATE TABLE IF NOT EXISTS extras (
 			id 			SERIAL PRIMARY KEY,
 			key 		TEXT,
 			val 		TEXT

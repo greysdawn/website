@@ -1,7 +1,9 @@
+const axios = require('axios');
+
 module.exports = (app) => {
 	app.get('/api/sysid', async (req, res)=> {
-		var id = await app.stores.extras.get('sysid');
-		res.send({id: id});
+		var id = (await app.stores.extras.get('sysid')).val;
+		res.send({id});
 	})
 
 	app.put('/api/sysid', async (req,res)=> {
@@ -15,12 +17,12 @@ module.exports = (app) => {
 	})
 
 	app.get('/api/sysmembs', async (req, res) => {
-		var id = await app.stores.extras.get('sysid');
+		var id = (await app.stores.extras.get('sysid')).val;
 		var sys = await axios(`https://api.pluralkit.me/v1/s/${id}/members`);
 		var members = sys.data.sort((a,b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : ((b.name.toLowerCase() > a.name.toLowerCase()) ? -1 : 0));
 		for(var i = 0; i < members.length; i++) {
 			if(!members[i].description) continue;
-			members[i].tmpdescription = stripper(conv.makeHtml(members[i].description),
+			members[i].tmpdescription = app.stripper(app.conv.makeHtml(members[i].description),
 			{
 				allowedTags: [
 					'em',

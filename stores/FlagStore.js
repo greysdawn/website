@@ -2,8 +2,6 @@ const fs = require('fs');
 
 class FlagStore {
 	constructor(app, db) {
-		super();
-
 		this.db = db;
 		this.app = app;
 	};
@@ -99,11 +97,11 @@ class FlagStore {
 			if(data.rows && data.rows[0]) {
 				var flags = {};
 				for(var fl of data.rows) {
-					var files = fs.readdirSync(__dirname+'/Images/flags/'+fl.hid);
+					var files = fs.readdirSync(__dirname+'/../Images/flags/'+fl.hid);
 					fl.images = [];
 					files.forEach(f => {
 						if(f.endsWith(".png")) fl.images.push(f);
-						else fl.desc = fs.readFileSync(`${__dirname}/..Images/flags/${fl.hid}/${f}`);
+						else fl.desc = fs.readFileSync(`${__dirname}/../Images/flags/${fl.hid}/${f}`);
 						fl.desc = this.app.conv.makeHtml(fl.desc.toString());
 					})
 					if(flags[fl.category]) {

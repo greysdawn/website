@@ -1,6 +1,8 @@
 module.exports = (app) => {
 	app.get('/api/projects', async (req,res)=> {
 		var projects = await app.stores.projects.getAll();
+		if(!projects?.[0]) return res.send([]);
+
 		for(var i = 0; i < projects.length; i++) if(projects[i].releases) projects[i].links[projects[i].links.length] = {label: "RELEASES", buttons: projects[i].releases};
 		res.send(projects);
 	})
