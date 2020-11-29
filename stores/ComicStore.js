@@ -47,6 +47,7 @@ class ComicStore {
 	}
 
 	async get(hid) {
+		console.log(hid)
 		return new Promise(async (res, rej) => {
 			try {
 				var cm = await this.getAll();
@@ -56,7 +57,7 @@ class ComicStore {
 			
 			//we have to order the comics
 			//to get the correct next/previous ones
-			if(cm?.[0]) {
+			if(Object.keys(cm)[0]) {
 				var comics = [];
 				Object.keys(cm).forEach(c => {
 					cm[c].map(x => comics.push(x));
@@ -100,7 +101,7 @@ class ComicStore {
 			if(data.rows && data.rows[0]) {
 				var comics = {};
 				for(var cm of data.rows) {
-					cm.images = fs.readdirSync(__dirname+'../Images/comics/'+cm.hid);
+					cm.images = fs.readdirSync(__dirname+'/../Images/comics/'+cm.hid);
 					cm.description = this.app.conv.makeHtml(cm.description);
 					if(comics[cm.story]) {
 						comics[cm.story].push(cm);

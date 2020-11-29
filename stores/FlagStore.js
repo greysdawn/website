@@ -52,7 +52,7 @@ class FlagStore {
 			
 			//we have to order the flags
 			//to get the correct next/previous ones
-			if(fl?.[0]) {
+			if(Object.keys(fl)[0]) {
 				var flags = [];
 				Object.keys(fl).forEach(f => {
 					fl[f].map(x => flags.push(x));
