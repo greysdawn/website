@@ -101,8 +101,10 @@ class FlagStore {
 					fl.images = [];
 					files.forEach(f => {
 						if(f.endsWith(".png")) fl.images.push(f);
-						else fl.desc = fs.readFileSync(`${__dirname}/../Images/flags/${fl.hid}/${f}`);
-						fl.desc = this.app.conv.makeHtml(fl.desc.toString());
+						else {
+							fl.desc = fs.readFileSync(`${__dirname}/../Images/flags/${fl.hid}/${f}`);
+							fl.desc = this.app.conv.makeHtml(fl.desc.toString());
+						}
 					})
 					if(flags[fl.category]) {
 						flags[fl.category].push(fl);
