@@ -152,8 +152,8 @@ module.exports = (app) => {
 	});
 
 	app.get('/flags/:hid', async (req,res)=>{
+		var flag = await app.stores.flags.get(req.params.hid);
 		if(flag) {
-			var flag = await app.stores.flags.get(req.params.hid);
 			res.send(index
 				.replace('$TITLE', flag.name+' Flag | Send Us into the Light')
 				.replace('$DESC', 'Home of the Grey Skies')
