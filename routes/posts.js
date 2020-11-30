@@ -62,7 +62,7 @@ module.exports = (app) => {
 			    "version": "1.0",
 			    "title": post.title+" | Send Us into the Light",
 			    "provider_name":"The Grey Skies",
-			    "thumbnail_url": "https://greysdawn.com/images/official.png",
+			    "thumbnail_url": post.cover_url || "https://greysdawn.com/official.png",
 			    "thumbnail_width": 32,
 			    "thumbnail_height": 32
 			});
@@ -72,7 +72,7 @@ module.exports = (app) => {
 			    "version": "1.0",
 			    "title": "Not Found | Send Us into the Light",
 			    "provider_name":"The Grey Skies",
-			    "thumbnail_url": "https://greysdawn.com/images/official.png",
+			    "thumbnail_url": "https://greysdawn.com/official.png",
 			    "thumbnail_width": 32,
 			    "thumbnail_height": 32
 			});
