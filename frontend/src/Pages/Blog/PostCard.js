@@ -15,7 +15,7 @@ class PostCard extends Component {
 		return (
 			<a
 				className="Post-container"
-				href={"/blog/post/"+post.id}
+				href={"/blog/post/"+post.hid}
 				target="__blank"
 				style={{animationDelay: (this.state.delay*.125)+"s"}}
 				>
