@@ -12,7 +12,7 @@ module.exports = (app) => {
 			.replace('$TWITTITLE','Send Us into the Light')
 			.replace('$OGTITLE','Send Us into the Light')
 			.replace('$OGDESC','Home of the Grey Skies')
-			.replace(/\$IMAGE/g, 'official.png')
+			.replace(/\$IMAGE/g, 'https://greysdawn.com/official.png')
 		);
 	});
 
@@ -24,7 +24,7 @@ module.exports = (app) => {
 			.replace('$TWITTITLE','Contact | Send Us into the Light')
 			.replace('$OGTITLE','Contact | Send Us into the Light')
 			.replace('$OGDESC','Home of the Grey Skies')
-			.replace(/\$IMAGE/g, 'official.png')
+			.replace(/\$IMAGE/g, 'https://greysdawn.com/official.png')
 		);
 	});
 
@@ -36,7 +36,7 @@ module.exports = (app) => {
 			.replace('$TWITTITLE','System | Send Us into the Light')
 			.replace('$OGTITLE','System | Send Us into the Light')
 			.replace('$OGDESC','System of the Grey Skies')
-			.replace(/\$IMAGE/g, 'official.png')
+			.replace(/\$IMAGE/g, 'https://greysdawn.com/official.png')
 		);
 	});
 
@@ -48,7 +48,7 @@ module.exports = (app) => {
 			.replace('$TWITTITLE','Blog | Send Us into the Light')
 			.replace('$OGTITLE','Blog | Send Us into the Light')
 			.replace('$OGDESC','Blog of the Grey Skies')
-			.replace(/\$IMAGE/g, 'official.png')
+			.replace(/\$IMAGE/g, 'https://greysdawn.com/official.png')
 		);
 	});
 
@@ -63,7 +63,7 @@ module.exports = (app) => {
 				.replace('$OGTITLE',post.title+' | Send Us into the Light')
 				.replace('$OGDESC',post.short)
 				.replace('$OEMBED','api/post/'+post.id+"/oembed")
-				.replace(/\$IMAGE/g, post.cover_url || 'official.png')
+				.replace(/\$IMAGE/g, post.cover_url || 'https://greysdawn.com/official.png')
 			);
 		} else {
 			res.send(index
@@ -73,7 +73,7 @@ module.exports = (app) => {
 				.replace('$TWITTITLE','404 | Send Us into the Light')
 				.replace('$OGTITLE','404 | Send Us into the Light')
 				.replace('$OGDESC','Post not found')
-				.replace(/\$IMAGE/g, 'official.png')
+				.replace(/\$IMAGE/g, 'https://greysdawn.com/official.png')
 			);
 		}
 	});
@@ -88,7 +88,7 @@ module.exports = (app) => {
 	// 			.replace('$TWITTITLE', proj.name+' | Send Us into the Light')
 	// 			.replace('$OGTITLE', proj.name+' | Send Us into the Light')
 	// 			.replace('$OGDESC', 'Home of the Grey Skies')
-	// 			.replace(/\$IMAGE/g, 'official.png')
+	// 			.replace(/\$IMAGE/g, 'https://greysdawn.com/official.png')
 	//		);
 	// 	} else {
 	// 		res.send(index
@@ -98,7 +98,7 @@ module.exports = (app) => {
 	// 			.replace('$TWITTITLE', '404 | Send Us into the Light')
 	// 			.replace('$OGTITLE', '404 | Send Us into the Light')
 	// 			.replace('$OGDESC', 'Project not found')
-	// 			.replace(/\$IMAGE/g, 'official.png')
+	// 			.replace(/\$IMAGE/g, 'https://greysdawn.com/official.png')
 	//		);
 	// 	}
 	// });
@@ -111,7 +111,7 @@ module.exports = (app) => {
 			.replace('$TWITTITLE', 'Comics | Send Us into the Light')
 			.replace('$OGTITLE', 'Comics | Send Us into the Light')
 			.replace('$OGDESC', 'Home of the Grey Skies')
-			.replace(/\$IMAGE/g, 'official.png')
+			.replace(/\$IMAGE/g, 'https://greysdawn.com/official.png')
 		);
 	});
 
@@ -135,7 +135,7 @@ module.exports = (app) => {
 				.replace('$TWITTITLE', '404 | Send Us into the Light')
 				.replace('$OGTITLE', '404 | Send Us into the Light')
 				.replace('$OGDESC', 'Comic not found')
-				.replace(/\$IMAGE/g, 'official.png')
+				.replace(/\$IMAGE/g, 'https://greysdawn.com/official.png')
 			);
 		}
 	});
@@ -148,7 +148,7 @@ module.exports = (app) => {
 			.replace('$TWITTITLE', 'Flags | Send Us into the Light')
 			.replace('$OGTITLE', 'Flags | Send Us into the Light')
 			.replace('$OGDESC', 'Home of the Grey Skies')
-			.replace(/\$IMAGE/g, 'official.png')
+			.replace(/\$IMAGE/g, 'https://greysdawn.com/official.png')
 		);
 	});
 
@@ -172,7 +172,7 @@ module.exports = (app) => {
 				.replace('$TWITTITLE', '404 | Send Us into the Light')
 				.replace('$OGTITLE', '404 | Send Us into the Light')
 				.replace('$OGDESC', 'Flag not found')
-				.replace(/\$IMAGE/g, 'official.png')
+				.replace(/\$IMAGE/g, 'https://greysdawn.com/official.png')
 			);
 		}
 	});
