@@ -125,7 +125,7 @@ module.exports = (app) => {
 				.replace('$TWITTITLE', comic.name+' | Send Us into the Light')
 				.replace('$OGTITLE', comic.name+' | Send Us into the Light')
 				.replace('$OGDESC', comic.tagline)
-				.replace(/\$IMAGE/g, `${comic.hid}/thumb.png`)
+				.replace(/\$IMAGE/g, `https://greysdawn.com/${comic.hid}/thumb.png`)
 			);
 		} else {
 			res.send(index
@@ -162,7 +162,7 @@ module.exports = (app) => {
 				.replace('$TWITTITLE', flag.name+' Flag | Send Us into the Light')
 				.replace('$OGTITLE', flag.name+' Flag | Send Us into the Light')
 				.replace('$OGDESC', 'Home of the Grey Skies')
-				.replace(/\$IMAGE/g, `${flag.hid}/thumb.png`)
+				.replace(/\$IMAGE/g, `https://greysdawn.com/${flag.hid}/thumb.png`)
 			);
 		} else {
 			res.send(index
