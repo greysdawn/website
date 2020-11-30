@@ -62,7 +62,7 @@ module.exports = (app) => {
 				.replace('$TWITTITLE',post.title+' | Send Us into the Light')
 				.replace('$OGTITLE',post.title+' | Send Us into the Light')
 				.replace('$OGDESC',post.short)
-				.replace('$OEMBED','api/post/'+post.id+"/oembed")
+				.replace('$OEMBED','api/post/'+post.hid+"/oembed")
 				.replace(/\$IMAGE/g, post.cover_url || 'https://greysdawn.com/official.png')
 			);
 		} else {
