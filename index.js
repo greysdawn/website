@@ -34,25 +34,29 @@ showdown.setOption('simpleLineBreaks', true);
 showdown.setOption('openLinksInNewWindow', true);
 showdown.setOption('underline', true);
 showdown.setOption('strikethrough', true);
-
 app.conv	= new showdown.Converter();
+
+const { pool } = require('pg');
+const session = require('express-session');
+app.use(session({
+  store: new (require('connect-pg-simple')(session))({
+  	pool
+  }),
+  secret: process.env.SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }
+}));
 
 const routes = {};
 
-const chars = process.env.CHARACTERS.split("");
-
-//FUNCTIONS
-
 app.utils = {};
-app.utils.genCode = (table, num) => {
-	var codestring = "";
-	var codenum = 0;
-	num = num || 8;
-	while (codenum < num){
-		codestring = codestring + table[Math.floor(Math.random() * (table.length))];
-		codenum = codenum + 1;
+app.utils.genCode = (table = process.env.CHARS, n = 4) => {
+	var str = "";
+	while (str.length < n){
+		str += table[Math.floor(Math.random() * (table.length))];
 	}
-	return codestring;
+	return str;
 }
 
 async function setup() {
@@ -62,22 +66,6 @@ async function setup() {
 	for(var file of files) {
 		routes[file.slice(0, -3)] = require(__dirname+'/routes/'+file)(app);
 	}
-
-	app.use((req, res, next) => {
-		var user = (req.cookies?.user ? JSON.parse(req.cookies.user) :
-				   {name: req.body.name, password: req.body.pass});
-	
-		app.stores.users.auth(user.name, user.password)
-		.then(u => {
-			if(u) {
-				req.verified = true;
-				req.user = u;
-			} else {
-				req.verified = false;
-			}
-			next()
-		})
-	});
 
 	app.use(express.static(path.join(__dirname, 'frontend/build')));
 	app.use(express.static(path.join(__dirname, 'Images/comics')));

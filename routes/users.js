@@ -1,22 +1,30 @@
+const SHA3 = require('crypto-js/sha3');
+const crypto = require('crypto');
+
 module.exports = (app) => {
 	app.get("/api/user",async (req,res)=>{
-		res.send(req.cookies.user ? JSON.parse(req.cookies.user) : undefined);
+		res.send(req.session.user);
 	})
 
 	app.get('/api/users', async (req,res)=>{
+		if(!req.session.user) return res.status(401).send('UNAUTHORIZED');
+		
 		var users = await app.stores.users.getAll();
-		if(users == "ERR") return res.send("ERR");
 		res.send(users);
 	})
 
-	app.post('/api/user', async(req,res)=>{
-		if(!req.verified) return res.status(401).send('UNAUTHORIZED');
+	app.post('/api/user', async (req,res)=>{
+		if(!req.session.user) return res.status(401).send('UNAUTHORIZED');
 		
 		try {
-			await app.stores.users.create(req.body.hid, req.body);
+			var salt = crypto.randomBytes(32).toString('base64');
+			req.body.password = SHA3(req.body.password + salt).toString();
+			var user = await app.stores.users.create(app.utils.genCode(), { ...req.body, salt });
 		} catch(e) {
 			return res.status(500).send('ERR');
 		}
+
+		return res.status(200).send(user);
 	})
 
 	app.get('/api/user/:hid', async (req,res)=> {
@@ -31,7 +39,7 @@ module.exports = (app) => {
 	})
 
 	app.get('/api/user/:hid/delete', async (req,res)=>{
-		if(!req.verified) return res.status(401).send('UNAUTHORIZED');
+		if(!req.session.user) return res.status(401).send('UNAUTHORIZED');
 		
 		try {
 			await app.stores.users.delete(req.params.hid);
@@ -43,7 +51,7 @@ module.exports = (app) => {
 	})
 
 	app.delete('/api/user/:hid',async (req,res)=>{
-		if(!req.verified) return res.status(401).send('UNAUTHORIZED');
+		if(!req.session.user) return res.status(401).send('UNAUTHORIZED');
 		
 		try {
 			await app.stores.users.delete(req.params.hid);
@@ -55,9 +63,10 @@ module.exports = (app) => {
 	})
 
 	app.post('/api/login', async (req,res)=> {
-		if(!req.verified) return res.status(401).send('UNAUTHORIZED');
-		
-		res.cookie('user', JSON.stringify(req.user), { expires: new Date('01/01/2030'), httpOnly: true });
+		var user = await app.stores.users.auth(req.body.name, req.body.pass);
+		if(!user) return res.status(404).send();
+
+		req.session.user = user;
 		res.status(200).send("OK");
 	});
 }

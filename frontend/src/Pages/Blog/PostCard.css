@@ -12,18 +12,25 @@
 	line-height: 3vmin;
 	width: 400px;
 	text-decoration: none;
+	overflow: hidden;
 }
 
 .Post-user {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
-	position: absolute;
-	left: 16px;
-	bottom: 8px;
+	justify-content: center;
+	width: 100%;
 	background-color: rgba(0,0,0, .5);
-	border-radius: 5px;
 	padding: 10px;
+	box-sizing: border-box;
+}
+
+.Post-user p {
+	text-align: left;
+	font-size: 4vmin;
+	line-height: 5vmin;
+	margin: 0;
 }
 
 .Post-icon {
@@ -31,7 +38,7 @@
 	height: calc(32px + 2vmin);
 	width: calc(32px + 2vmin);
 	object-fit: cover;
-	margin: 10px;
+	margin: 0 10px;
 }
 
 .Post-content {
@@ -49,7 +56,7 @@
 }
 
 .Post-fade p {
-	margin: 0;
+	margin: 0 5px;
 	text-align: justify;
 }
 
@@ -75,8 +82,4 @@
 	border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     position: relative;
-}
-
-.Post-cover p {
-	text-align: left;
 }

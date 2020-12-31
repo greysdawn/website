@@ -21,28 +21,28 @@ class Admin extends Component {
 	render() {
 		return (
 			<div className="Admin-container">
-				<div className="Admin-sidebar">
-				<a className="Admin-sideItem" href="/admin/createpost">
-					Create Post
-				</a>
-				<a className="Admin-sideItem" href="/admin/createuser">
-					Create User
-				</a>
-				<a className="Admin-sideItem" href="/admin/createcomic">
-					Create Comic
-				</a>
-				<a className="Admin-sideItem" href="/admin/createflag">
-					Create Flag
-				</a>
+				<Router>
+				<div className="Admin-header">
+				<Link to="/admin/createpost">
+					Post
+				</Link>
+				<Link to="/admin/createuser">
+					User
+				</Link>
+				<Link to="/admin/createcomic">
+					Comic
+				</Link>
+				<Link to="/admin/createflag">
+					Flag
+				</Link>
 				</div>
 				<div className="Admin-content">
-					<Router>
-						<Route path='/admin/createpost' exact render={(props)=><CreatePost {...props} user={this.state.user}/>} />
-						<Route path='/admin/createuser' exact render={(props)=><CreateUser {...props} user={this.state.user}/>} />
-						<Route path='/admin/createcomic' exact render={(props)=><CreateComic {...props} user={this.state.user}/>} />
-						<Route path='/admin/createflag' exact render={(props)=><CreateFlag {...props} user={this.state.user}/>} />
-					</Router>
+					<Route path='/admin/createpost' exact render={(props)=><CreatePost {...props} user={this.state.user}/>} />
+					<Route path='/admin/createuser' exact render={(props)=><CreateUser {...props} user={this.state.user}/>} />
+					<Route path='/admin/createcomic' exact render={(props)=><CreateComic {...props} user={this.state.user}/>} />
+					<Route path='/admin/createflag' exact render={(props)=><CreateFlag {...props} user={this.state.user}/>} />
 				</div>
+				</Router>
 			</div>
 		);
 	}

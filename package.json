@@ -13,11 +13,13 @@
   "dependencies": {
     "@discordjs/collection": "^0.1.6",
     "axios": "^0.19.2",
+    "connect-pg-simple": "^6.2.1",
     "cookie-parser": "^1.4.5",
     "crypto-js": "^4.0.0",
     "dblite": "^1.1.4",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-session": "^1.17.1",
     "formidable": "^1.2.2",
     "multer": "^1.4.2",
     "node-fetch": "^2.6.1",

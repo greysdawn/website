@@ -18,8 +18,8 @@ class PostStore {
 					timestamp,
 					tags
 				) VALUES ($1,$2,$3,$4,$5,$6,$7)`,
-				[hid, data.title, data.body, data.user_id,
-				 data.cover_url, data.timestamp, data.tags])
+				[hid, data.title, this.app.conv.makeHtml(data.body), data.user_id,
+				 data.cover_url, data.timestamp || new Date(), data.tags])
 			} catch(e) {
 				console.log(e);
 		 		return rej(e.message);
@@ -41,7 +41,7 @@ class PostStore {
 					timestamp,
 					tags
 				) VALUES ($1,$2,$3,$4,$5,$6,$7)`,
-				[hid, data.title, data.body, data.user_id,
+				[hid, data.title, this.app.conv.makeHtml(data.body), data.user_id,
 				 data.cover_url, data.timestamp, data.tags])
 			} catch(e) {
 				console.log(e);

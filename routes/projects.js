@@ -14,7 +14,7 @@ module.exports = (app) => {
 	})
 
 	app.post('/api/project', async (req,res)=> {
-		if(!req.verified) return res.status(401).send('UNAUTHORIZED');
+		if(!req.session.user) return res.status(401).send('UNAUTHORIZED');
 
 		try {
 			var project = await app.stores.projects.create(req.body);
@@ -26,7 +26,7 @@ module.exports = (app) => {
 	})
 
 	app.get('/api/project/:hid/delete', async (req,res)=> {
-		if(!req.verified) return res.status(401).send('UNAUTHORIZED');
+		if(!req.session.user) return res.status(401).send('UNAUTHORIZED');
 		
 		try {
 			await app.stores.projects.delete(req.params.hid);
@@ -38,7 +38,7 @@ module.exports = (app) => {
 	})
 
 	app.delete('/api/project/:hid', async (req,res)=> {
-		if(!req.verified) return res.status(401).send('UNAUTHORIZED');
+		if(!req.session.user) return res.status(401).send('UNAUTHORIZED');
 		
 		try {
 			await app.stores.projects.delete(req.params.hid);

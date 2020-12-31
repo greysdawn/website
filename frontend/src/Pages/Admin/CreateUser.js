@@ -1,34 +1,21 @@
 import React, { Component } from 'react';
-import * as fetch from 'node-fetch';
+import * as axios from 'axios';
 
 class CreateUser extends Component {
 	constructor() {
 		super();
 		this.state = {
-			user: {},
 			submitted: "not submitted",
-			name: "username",
-			pass: "password",
-			bio: "bio",
-			avatar_url: "avatar url"
+			name: "",
+			password: "",
+			bio: "",
+			avatar_url: ""
 		}
 
-		this.handleChange = this.handleChange.bind(this);
-		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
-	async componentDidMount() {
-		var us = await fetch('/api/loggedin');
-		if(us.status == 200) {
-			var json = await us.json();
-			this.setState({user: json, cur_name: json.name, cur_pass: json.pass})
-		} else {
-			this.setState({user: "ERR"});
-		}
-	}
-
-	handleChange(name, e) {
-		const n = name;
+	handleChange = (e) => {
+		const n = e.target.name;
 		const val = e.target.value;
 		this.setState((state) => {
 			state[n] = val;
@@ -36,71 +23,50 @@ class CreateUser extends Component {
 		})
 	}
 
-	async handleSubmit(e) {
+	handleSubmit = async (e) => {
 		e.preventDefault();
 		var st = this.state;
 
-		var res = await fetch('/api/user', {
-			method: "POST",
-			body: JSON.stringify(st),
-			headers: {
-				"Content-Type": "application/json"
-			}
-		});
-
-		if(res.status == 200) {
-			this.setState({submitted: true})
-			console.log(await res.text());
-		} else {
-			this.setState({submitted: false});
+		try {
+			var res = await axios.post('/api/user', JSON.stringify(st));
+		} catch(e) {
+			return this.setState({error: e.toString()})
 		}
-	}
 
-	setUser(user) {
-		this.setState({user: user});
+		this.setState({submitted: true})
 	}
 
 	render() {
-		if(this.state.submitted == "not submitted") {
-			return(
-				<section className="Admin-content">
-				<form onSubmit={this.handleSubmit} className="Admin-form">
-				<label>
-				Name:{" "}
-				<input type="text" onChange={(e)=>this.handleChange("name",e)} name="name" value={this.state.name}/>
-				</label>
-				<br/>
-				<label>
-				Pass:{" "}
-				<input type="text" onChange={(e)=>this.handleChange("pass",e)} name="pass" value={this.state.pass}/>
-				</label>
-				<br/>
-				<label>
-				Avatar:{" "}
-				<input type="text" onChange={(e)=>this.handleChange("avatar_url",e)} name="pass" value={this.state.avatar_url}/>
-				</label>
-				<br/>
-				<label>
-				Bio:{" "}
-				<textarea onChange={(e)=>this.handleChange("bio",e)} name="bio">{this.state.bio}</textarea>
-				</label>
-				<button type="submit" value="submit">Submit</button>
-				</form>
-				</section>
-				);
-		} else if(this.state.submitted == true) {
-			return (
-				<section>
-				<p>User created!</p>
-				</section>
-				)
-		} else {
-			return (
-				<section>
-				<p>Something went wrong</p>
-				</section>
-				)
-		}
+		return(
+			<div className="Admin-content">
+			{this.state.error && (<p className="App-error">{this.state.error}</p>)}
+			{this.state.submitted && (
+				<p className="App-success">Submitted!</p>
+			)}
+			<form onSubmit={this.handleSubmit} className="Admin-form">
+			<input
+				type="text" onChange={this.handleChange}
+				name="name" value={this.state.name} placeholder="name"
+			/>
+			<br/>
+			<input
+				type="text" onChange={this.handleChange}
+				name="password" value={this.state.password} placeholder="password"
+			/>
+			<br/>
+			<input
+				type="text" onChange={this.handleChange}
+				name="avatar_url" value={this.state.avatar_url} placeholder="avatar"
+			/>
+			<br/>
+			<textarea onChange={this.handleChange} name="bio" placeholder="bio">
+				{this.state.bio}
+			</textarea>
+			<br />
+			<button type="submit" value="submit">Submit</button>
+			</form>
+			</div>
+		);
 	}
 }
 

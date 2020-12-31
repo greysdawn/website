@@ -7,7 +7,7 @@ module.exports = (app) => {
 	})
 
 	app.put('/api/sysid', async (req,res)=> {
-		if(req.verified) {
+		if(req.session.user) {
 			var updated = await app.stores.extras.update('sysid', req.body.id);
 			if(updated) res.send('OK');
 			else res.status(500).send('ERR')

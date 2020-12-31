@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import {stateToHTML} from 'draft-js-export-html';
-
-import RichText from './RichText';
 
 import './CreatePost.css'
 
@@ -10,75 +7,57 @@ class CreatePost extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-					  id: this.props.user.id,
-					  submitted: "not submitted",
-					  tags: "",
-					  body: "",
-					  cover_url: "",
-					  title: ""
-					}
+		  user_id: this.props.user.hid,
+		  submitted: false,
+		  error: null,
+		  tags: "",
+		  body: "",
+		  cover_url: "",
+		  title: ""
+		}
 	}
 
 	handleChange = (e, raw) => {
-		if(e.target) {
-			const name = e.target.name;
-			const val = e.target.value ;
-			this.setState((state) => {
-				state[name] = val;
-				return state;
-			})
-		} else {
-			this.setState((state) => {
-				state["body"] = raw;
-				return state;
-			})
-		}
+		const name = e.target.name;
+		const val = e.target.value ;
+		this.setState((state) => {
+			state[name] = val;
+			return state;
+		})
 	}
 
 	handleSubmit = async (e) => {
 		e.preventDefault();
 		var st = this.state;
-		st.body = stateToHTML(st.body)
+		st.tags = st.tags.split(/,\s?/g);
 
 		try {
 			var res = await axios.post('/api/post', st);
 		} catch(e) {
-			var res = {status: 500}
+			return this.setState({error: e.toString()})
 		}
 
-		if(res.status == 200) {
-			this.setState({submitted: true})
-		} else {
-			this.setState({submitted: false});
-		}
+		this.setState({submitted: true, hid: res.data.hid})
 	}
 
 	render() {
-		if(this.state.submitted == "not submitted") {
-			return(
-				<section className="Admin-content">
-				<form onSubmit={this.handleSubmit} className="CreatePost-form">
-					<input placeholder="title" type="text" onChange={(e)=>this.handleChange(e)} name="title" value={this.state.title}/>
-					<RichText placeholder="body" name="body" onChange={this.handleChange} />
-					<input placeholder="cover_url" type="text" onChange={(e)=>this.handleChange(e)} name="cover_url" value={this.state.cover_url}/>
-					<input placeholder="tags" type="text" onChange={(e)=>this.handleChange(e)} name="tags" value={this.state.tags}/>
-					<button type="submit" value="submit">Submit</button>
-				</form>
-				</section>
-			);
-		} else if(this.state.submitted == true) {
-			return (
-				<section>
-				<p>Submitted!</p>
-				</section>
-			)
-		} else {
-			return (
-				<section>
-				<p>Something went wrong</p>
-				</section>
-			)
-		}
+		return(
+			<div className="Admin-content">
+			{this.state.error && (<p className="App-error">{this.state.error}</p>)}
+			{this.state.submitted && (
+				<p className="App-success">Submitted! <a href={`/blog/post/${this.state.hid}`}>Link</a></p>
+			)}
+			<form onSubmit={this.handleSubmit} className="CreatePost-form">
+				<input placeholder="title" type="text" onChange={(e)=>this.handleChange(e)} name="title" value={this.state.title}/>
+				<textarea placeholder="body" name="body" onChange={this.handleChange}>
+				{this.state.body}
+				</textarea>
+				<input placeholder="cover_url" type="text" onChange={(e)=>this.handleChange(e)} name="cover_url" value={this.state.cover_url}/>
+				<input placeholder="tags" type="text" onChange={(e)=>this.handleChange(e)} name="tags" value={this.state.tags}/>
+				<button type="submit" value="submit">Submit</button>
+			</form>
+			</div>
+		);
 	}
 }
 

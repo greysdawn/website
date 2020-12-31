@@ -64,6 +64,7 @@ module.exports = async (app) => {
 			hid 		TEXT,
 			name 		TEXT,
 			password 	TEXT,
+			salt 		TEXT,
 			bio 		TEXT,
 			avatar_url 	TEXT
 		);

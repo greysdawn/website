@@ -2,7 +2,7 @@ const fs = require('fs')
 
 module.exports = (app) => {
 	app.post('/api/flag', app.upload.array('panels',10), async (req,res)=> {
-		if(!req.verified) return res.status(401).send('UNAUTHORIZED');
+		if(!req.session.user) return res.status(401).send('UNAUTHORIZED');
 		
 		var flag = await app.stores.flags.get(req.body.hid);
 		if(flag) return res.status(400).send({err: "name taken"});

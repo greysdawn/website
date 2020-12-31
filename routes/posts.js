@@ -1,7 +1,7 @@
 module.exports = (app) => {
 	app.get('/api/posts', async (req,res)=>{
 		var posts = (await app.stores.posts.getAll());
-		if(posts == "ERR") return res.send("ERR");
+		if(posts == "ERR" || !posts?.[0]) return res.send("ERR");
 		res.send(posts);
 	})
 
@@ -13,10 +13,10 @@ module.exports = (app) => {
 
 	app.post('/api/post', async (req,res)=> {
 		res.set("Content-Type","text/html");
-		if(!req.verified) return res.status(401).send("UNAUTHORIZED");
+		if(!req.session.user) return res.status(401).send("UNAUTHORIZED");
 
 		try {
-			var post = await app.stores.posts.create(req.body.hid, req.body);
+			var post = await app.stores.posts.create(app.utils.genCode(), req.body);
 		} catch(e) {
 			return res.status(500).send('ERR');
 		}
@@ -31,7 +31,7 @@ module.exports = (app) => {
 	});
 
 	app.get('/api/post/:hid/delete', async (req,res)=>{
-		if(!req.verified) return res.status(401).send('UNAUTHORIZED');
+		if(!req.session.user) return res.status(401).send('UNAUTHORIZED');
 		
 		try {
 			await app.stores.posts.delete(req.params.hid);
@@ -43,7 +43,7 @@ module.exports = (app) => {
 	})
 
 	app.delete('/api/post/:hid', async (req,res)=>{
-		if(!req.verified) return res.status(401).send('UNAUTHORIZED');
+		if(!req.session.user) return res.status(401).send('UNAUTHORIZED');
 		
 		try {
 			await app.stores.posts.delete(req.params.hid);

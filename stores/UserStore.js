@@ -1,3 +1,5 @@
+const SHA3 = require('crypto-js/sha3');
+
 class UserStore {
 	constructor(app, db) {
 		this.db = db;
@@ -11,10 +13,12 @@ class UserStore {
 					hid,
 					name,
 					password,
+					salt,
 					bio,
 					avatar_url
-				) VALUES ($1,$2,$3,$4,$5)`,
-				[hid, data.name, data.password, data.bio, data.avatar_url])
+				) VALUES ($1,$2,$3,$4,$5,$6)`,
+				[hid, data.name, data.password, data.salt,
+				data.bio, data.avatar_url])
 			} catch(e) {
 				console.log(e);
 		 		return rej(e.message);
@@ -31,10 +35,12 @@ class UserStore {
 					hid,
 					name,
 					password,
+					salt,
 					bio,
 					avatar_url
-				) VALUES ($1,$2,$3,$4,$5)`,
-				[hid, data.name, data.password, data.bio, data.avatar_url])
+				) VALUES ($1,$2,$3,$4,$5,$6)`,
+				[hid, data.name, data.password, data.salt,
+				data.bio, data.avatar_url])
 			} catch(e) {
 				console.log(e);
 		 		return rej(e.message);
@@ -55,6 +61,7 @@ class UserStore {
 			
 			if(data.rows?.[0]) {
 				delete data.rows[0].password;
+				delete data.rows[0].salt;
 				res(data.rows[0]);
 			} else res(undefined);
 		})
@@ -70,7 +77,10 @@ class UserStore {
 			}
 			
 			if(data.rows && data.rows[0]) {
-				for(var row of data.rows) delete row.password;
+				for(var row of data.rows) {
+					delete row.password;
+					delete row.salt;
+				}
 				res(data.rows)
 			} else res(undefined);
 		})
@@ -118,13 +128,13 @@ class UserStore {
 	async auth(name, pass) {
 		return new Promise(async (res, rej) => {
 			try {
-				var data = await this.db.query(`SELECT * FROM users WHERE name = $1 AND password = $2`, [name, pass]);
+				var data = await this.db.query(`SELECT * FROM users WHERE name = $1`, [name]);
 			} catch(e) {
 				console.log(e);
 				return rej(e.message);
 			}
 			
-			if(data.rows?.[0]) {
+			if(data.rows?.[0] && SHA3(pass + data.rows[0].salt).toString() == data.rows[0].password) {
 				delete data.rows[0].password;
 				res(data.rows[0]);
 			} else res(undefined);

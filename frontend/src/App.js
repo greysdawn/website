@@ -17,6 +17,7 @@ import CPage from './Pages/Comics/Page';
 import FLanding from './Pages/Flags/Landing';
 import FPage from './Pages/Flags/Page';
 
+import Login from './Pages/Login';
 import NotFound from './Pages/NotFound';
 
 class App extends Component {
@@ -25,7 +26,6 @@ class App extends Component {
 		this.state = {
 			projects: undefined,
 			contacts: undefined,
-			login: {name: undefined, pass: undefined},
 			user: undefined,
 			nav: false
 		};
@@ -41,34 +41,8 @@ class App extends Component {
 		this.setState({projects: projects, contacts: contacts, user: user});
 	}
 
-	handleChange = (name, e) => {
-		const n = name;
-		const val = e.target.value;
-		this.setState((state) => {
-			state.login[n] = val;
-			return state;
-		})
-	}
-
-	handleSubmit = async (e) => {
-		e.preventDefault();
-		var st = this.state.login;
-
-		var res = await fetch('/api/login', {
-			method: "POST",
-			body: JSON.stringify(st),
-			headers: {
-				"Content-Type": "application/json"
-			}
-		});
-
-
-		if(res.status == 200) {
-			res = await fetch('/api/user');
-			this.setState({submitted: true, user: await res.json()})
-		} else {
-			this.setState({submitted: false});
-		}
+	handleSubmit = (user) => {
+		this.setState({ user });
 	}
 
 	toggleNav = (e) => {
@@ -130,28 +104,14 @@ class App extends Component {
 					<Route path="/comics/:hid" exact render={(props)=><CPage {...props}/>} />
 					<Route path="/flags" exact render={(props)=><FLanding {...props}/>} />
 					<Route path="/flags/:hid" exact render={(props)=><FPage {...props}/>} />
-
 					{
 						this.state.user ?
-						<Route path="/admin" render={(props)=> <Admin {...props} user={this.state.user} />} /> :
-						<Route path="/admin" render={(props)=> 
-							<Frag>
-							<form onSubmit={this.handleSubmit} className="Admin-form">
-							<label>
-							Name:{" "}
-							<input type="text" onChange={(e)=>this.handleChange("name",e)} name="name" value={this.state.name}/>
-							</label>
-							<br/>
-							<label>
-							Pass:{" "}
-							<input type="text" onChange={(e)=>this.handleChange("pass",e)} name="pass" value={this.state.pass}/>
-							</label>
-							<br/>
-							<button type="submit">Submit</button>
-							</form>
-							</Frag>
-						}
-						/>
+						<Route path="/admin" render={(props)=> {
+							return <Admin {...props} user={this.state.user} />
+						}} /> :
+						<Route path="/admin" render={(props)=> {
+							return <Login onSubmit={this.handleSubmit} />
+						}} />
 					}
 					<Route component={NotFound} />
 					</Switch>
@@ -161,14 +121,6 @@ class App extends Component {
 				);
 		}
 	}
-
-	//temporarily removing
-	/*
-		{this.state.projects.map((p, o) => {
-        	return <a href={`/project/${p.id}`}>{p.name}</a>
-        })}
-	*/
-	//<Route path="/project/:id" render={(props)=><Project {...props} project={this.state.projects.find(p => p.id == props.match.params.id)}/>} />
 }
 
 export default App;

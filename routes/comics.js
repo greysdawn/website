@@ -2,7 +2,7 @@ const fs = require('fs')
 
 module.exports = (app) => {
 	app.post('/api/comic', app.upload.array('panels',10), async (req,res)=> {
-		if(!req.verified) return res.status(401).send('UNAUTHORIZED');
+		if(!req.session.user) return res.status(401).send('UNAUTHORIZED');
 		
 		var comic = await app.stores.comics.getRaw(req.body.hid);
 		if(comic) return res.status(400).send({err: "hid taken"});
