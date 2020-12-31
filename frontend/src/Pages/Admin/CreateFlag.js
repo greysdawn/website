@@ -7,7 +7,7 @@ class CreateFlag extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-		  submitted: "not submitted",
+		  submitted: false,
 		  hid: "",
 		  desc: "",
 		  flagname: "",

@@ -7,7 +7,7 @@ class CreateComic extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-		  submitted: "not submitted",
+		  submitted: false,
 		  hid: "",
 		  tagline: "",
 		  desc: "",

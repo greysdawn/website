@@ -5,7 +5,7 @@ class CreateUser extends Component {
 	constructor() {
 		super();
 		this.state = {
-			submitted: "not submitted",
+			submitted: false,
 			name: "",
 			password: "",
 			bio: "",

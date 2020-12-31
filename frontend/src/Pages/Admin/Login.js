@@ -1,28 +1,19 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import * as axios from 'axios';
 
 class Login extends Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
+
 		this.state = {
-						name: "name",
-						pass: "pass",
-						submitted: "not submitted"
-					}
-
-	}
-
-	async componentDidMount() {
-		var us = await axios('/api/loggedin');
-		if(us.status == 200) {
-			this.setState({user: us.data, name: us.data.name, pass: us.data.pass})
-		} else {
-			this.setState({user: "ERR"});
+			name: '',
+			password: '',
+			submitted: false
 		}
 	}
 
-	handleChange = (name, e) => {
-		const n = name;
+	handleChange = (e) => {
+		const n = e.target.name;
 		const val = e.target.value;
 		this.setState((state) => {
 			state[n] = val;
@@ -34,55 +25,35 @@ class Login extends Component {
 		e.preventDefault();
 		var st = this.state;
 
-		var res = await fetch('/api/login', {
-			method: "POST",
-			body: JSON.stringify(st),
-			headers: {
-				"Content-Type": "application/json"
-			}
-		});
-
-		if(res.status == 200) {
-			this.setState({submitted: true})
-		} else {
-			this.setState({submitted: false});
+		try {
+			var res = await axios.post('/api/login', st);
+		} catch(e) {
+			return this.setState({error: e.toString()})
 		}
-	}
 
-	setUser(user) {
-		this.setState({user: user});
+		res = await axios('/api/user');
+		this.setState({submitted: true, user: res.data});
+		if(this.props.onSubmit) this.props.onSubmit(this.state.user);
 	}
 
 	render() {
-		if(this.state.submitted == "not submitted") {
-			return(
-				<form onSubmit={this.handleSubmit} className="Admin-form">
-					<label>
-					Name:{" "}
-					<input type="text" onChange={(e)=>this.handleChange("name",e)} name="name" value={this.state.name}/>
-					</label>
-					<br/>
-					<label>
-					Pass:{" "}
-					<input type="text" onChange={(e)=>this.handleChange("pass",e)} name="pass" value={this.state.pass}/>
-					</label>
-					<br/>
-					<button type="submit">Submit</button>
+		return (
+			<section>
+				<form onSubmit={this.handleSubmit} style={{marginTop: '50px'}}>
+				<input
+					type='text' name='name' value={this.state.name}
+					placeholder='name' onChange={this.handleChange}
+				/>
+				<br />
+				<input
+					type='text' name='password' value={this.state.password}
+					placeholder='password' onChange={this.handleChange}
+				/>
+				<br />
+				<button type="submit">Submit</button>
 				</form>
-			);
-		} else if(this.state.submitted == true) {
-			return (
-				<section>
-				<p>Logged in!</p>
-				</section>
-			)
-		} else {
-			return (
-				<section>
-				<p>Something went wrong</p>
-				</section>
-			)
-		}
+			</section>
+		)
 	}
 }
 
