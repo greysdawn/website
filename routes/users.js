@@ -63,7 +63,7 @@ module.exports = (app) => {
 	})
 
 	app.post('/api/login', async (req,res)=> {
-		var user = await app.stores.users.auth(req.body.name, req.body.pass);
+		var user = await app.stores.users.auth(req.body.name, req.body.password);
 		if(!user) return res.status(404).send();
 
 		req.session.user = user;
