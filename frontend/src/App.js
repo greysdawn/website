@@ -17,7 +17,7 @@ import CPage from './Pages/Comics/Page';
 import FLanding from './Pages/Flags/Landing';
 import FPage from './Pages/Flags/Page';
 
-import Login from './Pages/Login';
+import Login from './Pages/Admin/Login';
 import NotFound from './Pages/NotFound';
 
 class App extends Component {
