@@ -49,14 +49,7 @@ module.exports = async (app) => {
 			id 			SERIAL PRIMARY KEY,
 			hid 		TEXT,
 			name 		TEXT,
-			tag 		TEXT,
-			description TEXT,
-			title 		TEXT,
-			about		TEXT,
-			background	TEXT,
-			links 		JSONB,
-			releases 	JSONB,
-			gallery		JSONB
+			tag 		TEXT
 		);
 
 		CREATE TABLE IF NOT EXISTS users (

@@ -6,7 +6,6 @@ import './App.css';
 import Home     from './Pages/Main/Home';
 import Contact  from './Pages/Main/Contact';
 import Project  from './Pages/Main/Project';
-import System   from './Pages/Main/System';
 import Blog     from './Pages/Blog/Blog';
 import Post     from './Pages/Blog/Post';
 import Admin    from './Pages/Admin/Admin';
@@ -51,7 +50,7 @@ class App extends Component {
 	}
 
 	render() {
-		var links = ["home","contact","system","blog"];
+		var links = ["home","contact","blog"];
 		if(!this.state.projects) {
 			return null;
 		} else {
@@ -97,7 +96,6 @@ class App extends Component {
 					<Switch>
 					<Route path="/" exact render={(props)=><Home {...props} list={this.state.projects} />}/>
 					<Route path="/contact" render={(props)=><Contact {...props} list={this.state.contacts} />}/>
-					<Route path="/system" render={(props)=><System {...props}/>} />
 					<Route path="/blog" exact render={(props)=><Blog {...props} />} />
 					<Route path="/blog/post/:id" exact render={(props)=><Post {...props}/>} />
 					<Route path="/comics" exact render={(props)=><CLanding {...props}/>} />

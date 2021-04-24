@@ -28,18 +28,6 @@ module.exports = (app) => {
 		);
 	});
 
-	app.get('/system',(req,res)=>{
-		res.send(index
-			.replace('$TITLE','System | Send Us into the Light')
-			.replace('$DESC','System of the Grey Skies')
-			.replace('$TWITDESC','System of the Grey Skies')
-			.replace('$TWITTITLE','System | Send Us into the Light')
-			.replace('$OGTITLE','System | Send Us into the Light')
-			.replace('$OGDESC','System of the Grey Skies')
-			.replace(/\$IMAGE/g, 'https://greysdawn.com/official.png')
-		);
-	});
-
 	app.get('/blog',(req,res)=>{
 		res.send(index
 			.replace('$TITLE','Blog | Send Us into the Light')
